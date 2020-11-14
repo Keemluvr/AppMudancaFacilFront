@@ -3,7 +3,7 @@
     <!-- desktop -->
     <nav class="nav-desktop">
       <!-- Deslogado -->
-      <router-link to="/meus-imoveis">
+      <router-link to="/login">
         <img src="@/assets/icons/entrar.svg" class="icon-entrar" />
         Entrar
       </router-link>
@@ -38,7 +38,7 @@
 
       <div class="menu">
         <!-- Deslogado -->
-        <router-link to="/meus-imoveis"> Entrar </router-link>
+        <router-link to="/login"> Entrar </router-link>
 
         <!-- Logado -->
         <router-link to="/meus-imoveis"> Meus Imóveis </router-link>
@@ -59,7 +59,6 @@ export default {
   },
   methods: {
     handlehamburguer: function () {
-      console.log(this.mobileAberto);
       return (this.mobileAberto = !this.mobileAberto);
     },
   },
@@ -89,6 +88,7 @@ a {
   text-decoration: none;
   display: inline-block;
   transition: all 0.5s ease-in;
+  min-width: 100px;
 }
 
 a:hover {

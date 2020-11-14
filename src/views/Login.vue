@@ -1,9 +1,7 @@
 <template>
   <div>
     <Header />
-    <div class="app">
-      <Body class="main" />
-    </div>
+    <Body />
     <Footer />
   </div>
 </template>
@@ -11,10 +9,10 @@
 <script>
 import Header from "@/components/Header.vue";
 import Footer from "@/components/Footer.vue";
-import Body from "@/pages/Home.vue";
+import Body from "@/pages/Login.vue";
 
 export default {
-  name: "Home",
+  name: "Login",
   components: {
     Header,
     Body,

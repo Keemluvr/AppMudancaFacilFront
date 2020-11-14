@@ -1,24 +1,10 @@
 <template>
   <div id="app">
-    <Header />
-    <main id="main">
+    <main>
       <router-view />
     </main>
-    <Footer />
   </div>
 </template>
-
-<script>
-import Header from "@/components/Header.vue";
-import Footer from "@/components/Footer.vue";
-
-export default {
-  components: {
-    Header,
-    Footer,
-  },
-};
-</script>
 
 <style>
 @import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap");
@@ -150,12 +136,12 @@ table {
   border-collapse: collapse;
   border-spacing: 0;
 }
-#app {
+.app {
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
+  min-height: 75vh;
 }
-#main {
+.main {
   flex: 1;
 }
 </style>
