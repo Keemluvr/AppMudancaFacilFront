@@ -1,6 +1,6 @@
 <template>
   <footer>
-    <img src="@/assets/images/ellipse-footer.png" />
+    <img class="circle-bottom" src="@/assets/images/ellipse-footer.png" />
   </footer>
 </template>
 
@@ -10,11 +10,11 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 footer {
   position: relative;
 }
-img {
+.circle-bottom {
   margin-left: -60px;
   max-height: 150px;
 }

@@ -80,7 +80,9 @@ nav {
 }
 
 img {
+  min-width: 18px;
   width: 18px;
+  max-width: 18px;
   margin-right: 5px;
 }
 
@@ -88,7 +90,6 @@ a {
   text-decoration: none;
   display: inline-block;
   transition: all 0.5s ease-in;
-  min-width: 100px;
 }
 
 a:hover {
@@ -97,7 +98,7 @@ a:hover {
 
 a + a {
   margin-left: 50px;
-}
+} 
 
 .icon-entrar {
   padding-bottom: -2px;

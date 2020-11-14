@@ -1,7 +1,9 @@
 <template>
   <div>
     <Header />
-    <Body />
+   <div class="app">
+      <Body class="main" />
+    </div>
     <Footer />
   </div>
 </template>
