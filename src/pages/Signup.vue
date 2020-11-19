@@ -10,26 +10,38 @@
     <div class="signup">
       <h1>Cadastro</h1>
       <div class="signup-wrapper">
-        <form class="signup-form">
+        <form class="signup-form" @submit="signup">
           <div class="input">
             <label for="name">Nome completo</label>
-            <input id="name" />
+            <input id="name" v-model="user.name" />
           </div>
+          <span class="message-error" v-if="errors.name">
+            Nome é obrigatório.
+          </span>
 
           <div class="input">
             <label for="email">Email</label>
-            <input id="email" type="email" />
+            <input id="email" type="email" v-model="user.email" />
           </div>
+          <span class="message-error" v-if="errors.email">
+            Email é obrigatório.
+          </span>
 
           <div class="input">
             <label for="senha">Senha</label>
-            <input id="email" type="password" />
+            <input id="senha" type="password" v-model="user.password" />
           </div>
+          <span class="message-error" v-if="errors.password">
+            Senha é obrigatório.
+          </span>
 
           <div class="input">
             <label for="senha2">Reescrever a senha</label>
-            <input id="senha2" type="password" />
+            <input id="senha2" type="password" v-model="user.password2" />
           </div>
+          <span class="message-error" v-if="errors.password2">
+            Esta senha deve ser igual ao campo anterior.
+          </span>
 
           <button type="submit">Cadastrar</button>
         </form>
@@ -42,15 +54,94 @@
 </template>
 
 <script>
+import { isEmpty } from "lodash";
+import { createUser } from "../services/users";
+
 export default {
   name: "Signup",
   components: {},
   data() {
     return {
-      immobile: null,
+      user: {
+        name: "",
+        email: "",
+        password: "",
+        password2: "",
+      },
+      errors: {
+        name: false,
+        email: false,
+        password: false,
+        password2: false,
+      },
     };
   },
-  mounted() {},
+  watch: {
+    "user.name"(value) {
+      isEmpty(value) ? (this.errors.name = true) : (this.errors.name = false);
+    },
+    "user.email"(value) {
+      isEmpty(value) || !this.validEmail(value)
+        ? (this.errors.email = true)
+        : (this.errors.email = false);
+    },
+    "user.password"(value) {
+      isEmpty(value)
+        ? (this.errors.password = true)
+        : (this.errors.password = false);
+    },
+    "user.password2"(value) {
+      isEmpty(value) || this.user.password !== value
+        ? (this.errors.password2 = true)
+        : (this.errors.password2 = false);
+    },
+  },
+  methods: {
+    validFields: function () {
+      event.preventDefault();
+      const { name, email, password, password2 } = this.user;
+
+      isEmpty(name) ? (this.errors.name = true) : (this.errors.name = false);
+      isEmpty(email) || !this.validEmail(email)
+        ? (this.errors.email = true)
+        : (this.errors.email = false);
+      isEmpty(password)
+        ? (this.errors.password = true)
+        : (this.errors.password = false);
+      isEmpty(password2) || password !== password2
+        ? (this.errors.password2 = true)
+        : (this.errors.password2 = false);
+    },
+    validEmail: function (email) {
+      var re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+      return re.test(email);
+    },
+    signup: function () {
+      event.preventDefault();
+      this.validFields();
+      if (
+        !this.errors.name &&
+        !this.errors.email &&
+        !this.errors.password &&
+        !this.errors.password2
+      ) {
+        createUser({
+          name: this.user.name,
+          email: this.user.email,
+          password: this.user.password,
+          telephone: "49999999999",
+          legalEntity: "fisica",
+          photo: "",
+        })
+          .then(() => {
+            console.log("deu certo");
+          })
+          .catch(() => {
+            console.log("deu erro");
+          });
+      }
+    },
+  },
 };
 </script>
 
@@ -129,7 +220,7 @@ img {
 }
 
 h1 {
-  color: #4976EF;
+  color: #4976ef;
   font-weight: 400;
   font-size: 50px;
   margin: 10vh 0 3vh 0;
@@ -142,10 +233,12 @@ h1 {
   flex-direction: column;
   position: relative;
   height: 60px;
+  margin-top: 30px;
 }
 
-.input + .input {
-  margin-top: 40px;
+.message-error {
+  color: red;
+  font-size: 15px;
 }
 
 label {
@@ -163,13 +256,13 @@ input {
   position: absolute;
   border-radius: 4px;
   padding: 5px 0 0 10px;
-  border: 1.5px solid #C6C6C6;
+  border: 1.5px solid #c6c6c6;
   transition: all 0.4s ease-in-out;
 }
 
 input:focus {
   outline: none;
-  border: 1.5px solid #4976EF;
+  border: 1.5px solid #4976ef;
 }
 
 button {
