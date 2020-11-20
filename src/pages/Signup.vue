@@ -11,6 +11,13 @@
       <h1>Cadastro</h1>
       <div class="signup-wrapper">
         <form class="signup-form" @submit="signup">
+          <Loading
+            :is-full-page="true"
+            :active="loading"
+            :opacity="0.8"
+            loader="dots"
+            color="#3F3D56"
+          />
           <div class="input">
             <label for="name">Nome completo</label>
             <input id="name" v-model="user.name" />
@@ -56,12 +63,17 @@
 <script>
 import { isEmpty } from "lodash";
 import { createUser } from "../services/users";
+import Loading from "vue-loading-overlay";
+import "vue-loading-overlay/dist/vue-loading.css";
 
 export default {
   name: "Signup",
-  components: {},
+  components: {
+    Loading,
+  },
   data() {
     return {
+      loading: false,
       user: {
         name: "",
         email: "",
@@ -73,6 +85,22 @@ export default {
         email: false,
         password: false,
         password2: false,
+      },
+      notification: {
+        options: {
+          show: {
+            success: {
+              position: "topRight",
+              theme: "dark",
+              progressBarColor: "#4976EF",
+            },
+            error: {
+              theme: "dark",
+              progressBarColor: "#4976EF",
+              position: "topRight",
+            },
+          },
+        },
       },
     };
   },
@@ -125,6 +153,7 @@ export default {
         !this.errors.password &&
         !this.errors.password2
       ) {
+        this.loading = true;
         createUser({
           name: this.user.name,
           email: this.user.email,
@@ -134,10 +163,21 @@ export default {
           photo: "",
         })
           .then(() => {
-            console.log("deu certo");
+            this.loading = false;
+            this.$toast.show(
+              "Cadastro realizado com sucesso!",
+              "SUCESSO",
+              this.notification.options.show.sucess
+            );
+            this.$router.push("/login");
           })
           .catch(() => {
-            console.log("deu erro");
+            this.loading = false;
+            this.$toast.show(
+              "Erro ao realizar cadastro!",
+              "ERRO",
+              this.notification.options.show.error
+            );
           });
       }
     },
