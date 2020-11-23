@@ -169,6 +169,7 @@ export default {
               "SUCESSO",
               this.notification.options.show.sucess
             );
+            this.$store.commit("UPDATE_LOGIN", true);
             this.$router.push("/login");
           })
           .catch(() => {
