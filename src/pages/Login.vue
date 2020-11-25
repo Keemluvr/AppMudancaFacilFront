@@ -53,6 +53,7 @@
 
 <script>
 import { isEmpty } from "lodash";
+// import { loginUser } from "../services/users";
 // import Loading from "vue-loading-overlay";
 import "vue-loading-overlay/dist/vue-loading.css";
 
@@ -119,10 +120,10 @@ export default {
     login: function () {
       event.preventDefault();
       this.validFields();
+      const { email, password } = this.user;
       if (!this.errors.email && !this.errors.password) {
         this.loading = true;
-        // TO-DO
-        // login
+        this.$store.dispatch("getUser", { email, password });
       }
     },
   },

@@ -3,24 +3,28 @@
     <!-- desktop -->
     <nav class="nav-desktop">
       <!-- Deslogado -->
-      <router-link to="/login">
+      <router-link v-if="!$store.state.isLogged" to="/login">
         <img src="@/assets/icons/entrar.svg" class="icon-entrar" />
         Entrar
       </router-link>
 
       <!-- Logado -->
-      <router-link to="/meus-imoveis">
+      <router-link v-if="$store.state.isLogged" to="/meus-imoveis">
         <img src="@/assets/icons/casa.svg" class="icon-casa" />
         Meus Imóveis
       </router-link>
 
-      <router-link to="/perfil">
+      <router-link v-if="$store.state.isLogged" to="/perfil">
         <img src="@/assets/icons/usuario.svg" class="icon-user" />
-        Perfil
+        {{ name }}
       </router-link>
 
-      <router-link to="/">
-        <img src="@/assets/icons/sair.svg" class="icon-casa" />
+      <router-link v-if="$store.state.isLogged" to="/">
+        <img
+          src="@/assets/icons/sair.svg"
+          class="icon-casa"
+          v-on:click="logOut"
+        />
       </router-link>
     </nav>
     <!-- mobile -->
@@ -50,6 +54,8 @@
 </template>
 
 <script>
+import { upperFirst } from "lodash";
+
 export default {
   name: "Header",
   data: function () {
@@ -57,9 +63,17 @@ export default {
       mobileAberto: false,
     };
   },
+  computed: {
+    name() {
+      return upperFirst(this.$store.state.user.name.trim().replace(/ .*/, ""));
+    },
+  },
   methods: {
-    handlehamburguer: function () {
+    handlehamburguer() {
       return (this.mobileAberto = !this.mobileAberto);
+    },
+    logOut() {
+      this.$store.dispatch("logOut");
     },
   },
 };
@@ -98,7 +112,7 @@ a:hover {
 
 a + a {
   margin-left: 50px;
-} 
+}
 
 .icon-entrar {
   padding-bottom: -2px;
