@@ -9,11 +9,13 @@
 
 <script>
 import Header from "@/components/Header.vue";
+import Body from "@/pages/Dashboard.vue";
 
 export default {
   name: "Dashboard",
   components: {
     Header,
+    Body,
   },
 };
 </script>
