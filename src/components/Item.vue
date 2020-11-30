@@ -14,7 +14,7 @@
         :key="index"
         class="items"
       >
-        <div class="image">...</div>
+        <img class="image" src="@/assets/icons/casa.svg" />
         <row :gutter="12">
           <column class="title" :xs="12" :lg="6">{{ immobile.title }}</column>
           <column class="price" :xs="12" :lg="6"
@@ -90,6 +90,7 @@ export default {
   height: 40vh;
   margin-top: 1vw;
   margin-bottom: 1vw;
+  background-color: white;
 }
 
 .title {
@@ -112,8 +113,8 @@ export default {
   color: #4976ee;
 }
 .image {
-  width: 30vw;
-  height: 30vh;
+  width: 40vw;
+  height: 40vh;
 }
 column {
   text-align: justify;
