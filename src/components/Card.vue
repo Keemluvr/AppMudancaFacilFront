@@ -1,8 +1,6 @@
 <template>
   <div class="content">
-    <div class="image">
-      
-    </div>
+    <div class="image"></div>
   </div>
 </template>
 
@@ -12,7 +10,6 @@ export default {
   data: function () {
     return {};
   },
-  methods: {},
 };
 </script>
 
