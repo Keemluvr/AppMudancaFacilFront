@@ -62,9 +62,7 @@
 
 <script>
 import { isEmpty } from "lodash";
-import { createUser } from "../services/users";
 import Loading from "vue-loading-overlay";
-import "vue-loading-overlay/dist/vue-loading.css";
 
 export default {
   name: "Signup",
@@ -85,22 +83,6 @@ export default {
         email: false,
         password: false,
         password2: false,
-      },
-      notification: {
-        options: {
-          show: {
-            success: {
-              position: "topRight",
-              theme: "dark",
-              progressBarColor: "#4976EF",
-            },
-            error: {
-              theme: "dark",
-              progressBarColor: "#4976EF",
-              position: "topRight",
-            },
-          },
-        },
       },
     };
   },
@@ -144,7 +126,7 @@ export default {
       var re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
       return re.test(email);
     },
-    signup: function () {
+    signup: async function () {
       event.preventDefault();
       this.validFields();
       if (
@@ -154,31 +136,17 @@ export default {
         !this.errors.password2
       ) {
         this.loading = true;
-        createUser({
-          name: this.user.name,
-          email: this.user.email,
-          password: this.user.password,
-          telephone: "49999999999",
-          legalEntity: "fisica",
-          photo: "",
-        })
-          .then(() => {
-            this.loading = false;
-            this.$toast.show(
-              "Cadastro realizado com sucesso!",
-              "SUCESSO",
-              this.notification.options.show.sucess
-            );
-            this.$store.commit("UPDATE_LOGIN", true);
-            this.$router.push("/login");
+        await this.$store
+          .dispatch("createUser", {
+            name: this.user.name,
+            email: this.user.email,
+            password: this.user.password,
+            telephone: "49999999999",
+            legalEntity: "fisica",
+            photo: "",
           })
-          .catch(() => {
+          .finally(() => {
             this.loading = false;
-            this.$toast.show(
-              "Erro ao realizar cadastro!",
-              "ERRO",
-              this.notification.options.show.error
-            );
           });
       }
     },

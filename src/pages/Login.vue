@@ -53,9 +53,6 @@
 
 <script>
 import { isEmpty } from "lodash";
-// import { loginUser } from "../services/users";
-// import Loading from "vue-loading-overlay";
-import "vue-loading-overlay/dist/vue-loading.css";
 
 export default {
   name: "Login",
@@ -70,22 +67,6 @@ export default {
       errors: {
         email: false,
         password: false,
-      },
-      notification: {
-        options: {
-          show: {
-            success: {
-              position: "topRight",
-              theme: "dark",
-              progressBarColor: "#4976EF",
-            },
-            error: {
-              theme: "dark",
-              progressBarColor: "#4976EF",
-              position: "topRight",
-            },
-          },
-        },
       },
     };
   },
@@ -123,7 +104,8 @@ export default {
       const { email, password } = this.user;
       if (!this.errors.email && !this.errors.password) {
         this.loading = true;
-        this.$store.dispatch("getUser", { email, password });
+        this.$store.dispatch("getUser", { user: { email, password } });
+        this.loading = false;
       }
     },
   },

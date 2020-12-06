@@ -20,5 +20,12 @@ export default {
     Body,
     Footer,
   },
+  head: {
+    title: {
+      inner: "Home",
+    },
+    link: [{ rel: "stylesheet", href: "iziToast.min.css" }],
+    script: [{ type: "text/javascript", src: "iziToast.min.js" }],
+  },
 };
 </script>

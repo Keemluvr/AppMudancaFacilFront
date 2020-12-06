@@ -2,18 +2,19 @@ import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
 import store from './store'
-import VueIziToast from "vue-izitoast";
-import { toast } from './mixins/toast'
+import VueHead from 'vue-head'
+import VueToast from 'vue-toast-notification';
+
+import 'vue-toast-notification/dist/theme-sugar.css';
 
 Vue.config.productionTip = false
 
-Vue.use(VueIziToast);
+Vue.use(VueHead)
+Vue.use(VueToast)
 
 new Vue({
-  mixins: [toast],
   router,
   store,
   render: h => h(App)
 }).$mount('#app')
 
-import 'izitoast/dist/css/iziToast.min.css'
