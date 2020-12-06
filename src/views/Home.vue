@@ -22,10 +22,8 @@ export default {
   },
   head: {
     title: {
-      inner: "Home",
+      inner: "Página inicial",
     },
-    link: [{ rel: "stylesheet", href: "iziToast.min.css" }],
-    script: [{ type: "text/javascript", src: "iziToast.min.js" }],
   },
 };
 </script>

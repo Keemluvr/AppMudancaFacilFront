@@ -1,110 +1,23 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import router from '../router'
-import { loginUser } from "@/services/users"
-import { createUser } from "../services/users"
+
+import { stateUser, mutationsUser, actionsUser } from './user'
+import { stateImmobile, mutationsImmobile, actionsImmmobile } from './immobile'
 
 Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    isLogged: false,
-    user: {
-      name: "",
-      email: "",
-      legalEntity: "",
-      telephone: ""
-    },
-    loadingLogin: false
+    ...stateUser,
+    ...stateImmobile,
   },
   mutations: {
-    UPDATE_LOGIN(state, payload) {
-      state.isLogged = payload
-    },
-    UPDATE_USER(state, payload) {
-      state.user = payload
-    },
+    ...mutationsUser,
+    ...mutationsImmobile,
   },
   actions: {
-    /** Action para a criação de um novo usuário */
-    createUser(context, payload) {
-      createUser(payload)
-        // Usuário criado com sucesso
-        .then(({ data }) => {
-          // Loga o usuário com a conta que acabou de criar
-          context.dispatch("getUser", {
-            user: {
-              email: data.user.email,
-              password: payload.password
-            },
-            popupSuccess: {
-              message: 'Cadastro realizado com sucesso!',
-              type: 'success',
-              position: 'top-right'
-            },
-            popupError: {
-              message: 'Erro ao realizar cadastro!',
-              type: 'error',
-              position: 'top-right'
-            }
-          })
-        })
-        // Erro ao criar usuário
-        .catch(({ response }) => {
-          // Mostra o popup que houve um erro no cadastro
-          Vue.$toast.open({
-            message: response.data.error,
-            type: 'error',
-            position: 'top-right'
-          });
-        })
-    },
-
-    /** Action para a o usuário logar na conta */
-    getUser(context, payload) {
-      loginUser(payload.user)
-        // Login realizado com sucesso
-        .then(response => {
-          const { name, email, legalEntity, telephone } = response.data.user
-
-          // Atualiza as variáveis de login
-          context.commit("UPDATE_USER", { name, email, legalEntity, telephone })
-          context.commit("UPDATE_LOGIN", true)
-
-          // Mostra o popup que o login foi um sucesso
-          Vue.$toast.open(payload.popupSuccess ? payload.popupSuccess : {
-            message: "Login realizado com sucesso!",
-            type: "success",
-            position: "top-right",
-          })
-
-          // Redireciona o usuário para a tela inicial
-          router.push('/')
-        })
-        // Erro ao realizar login
-        .catch(({ response }) => {
-          // Mostra o popup que houve um erro ao realizar o login
-          Vue.$toast.open(payload.popupError ? payload.popupError : {
-            message: response.data.error,
-            type: 'error',
-            position: 'top-right',
-          })
-        })
-    },
-
-    /** Action para a o usuário deslogar da conta*/
-    logOut(context) {
-      // Atualiza as variáveis de login
-      context.commit("UPDATE_USER", { name: "", email: "", legalEntity: "", telephone: "" })
-      context.commit("UPDATE_LOGIN", false)
-
-      // Mostra o popup que o logout foi um sucesso
-      Vue.$toast.open({
-        message: "Conta deslogada com sucesso!",
-        type: 'success',
-        position: 'top-right',
-      })
-    },
+    ...actionsUser,
+    ...actionsImmmobile,
   },
   modules: {
   }
