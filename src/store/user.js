@@ -10,8 +10,7 @@ export const stateUser = {
     legalEntity: "",
     telephone: ""
   },
-  loadingLogin: false
-
+  loading: false
 }
 
 export const mutationsUser = {
@@ -26,9 +25,11 @@ export const mutationsUser = {
 export const actionsUser = {
   /** Action para a criação de um novo usuário */
   createUser(context, payload) {
+    context.state.loading = true
     createUser(payload)
       // Usuário criado com sucesso
       .then(({ data }) => {
+        context.state.loading = false
         // Loga o usuário com a conta que acabou de criar
         context.dispatch("getUser", {
           user: {
@@ -49,6 +50,8 @@ export const actionsUser = {
       })
       // Erro ao criar usuário
       .catch(({ response }) => {
+        context.state.loading = false
+
         // Mostra o popup que houve um erro no cadastro
         Vue.$toast.open({
           message: response.data.error,
@@ -60,9 +63,12 @@ export const actionsUser = {
 
   /** Action para a o usuário logar na conta */
   getUser(context, payload) {
+    context.state.loading = true
     loginUser(payload.user)
       // Login realizado com sucesso
       .then(response => {
+        context.state.loading = false
+
         const { name, email, legalEntity, telephone } = response.data.user
 
         // Atualiza as variáveis de login
@@ -81,6 +87,8 @@ export const actionsUser = {
       })
       // Erro ao realizar login
       .catch(({ response }) => {
+        context.state.loading = false
+
         // Mostra o popup que houve um erro ao realizar o login
         Vue.$toast.open(payload.popupError ? payload.popupError : {
           message: response.data.error,

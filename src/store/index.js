@@ -1,8 +1,16 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 
-import { stateUser, mutationsUser, actionsUser } from './user'
-import { stateImmobile, mutationsImmobile, actionsImmmobile } from './immobile'
+import {
+  stateUser,
+  mutationsUser,
+  actionsUser
+} from './user'
+import {
+  stateImmobile,
+  mutationsImmobile,
+  actionsImmobile
+} from './immobile'
 
 Vue.use(Vuex)
 
@@ -17,7 +25,7 @@ export default new Vuex.Store({
   },
   actions: {
     ...actionsUser,
-    ...actionsImmmobile,
+    ...actionsImmobile,
   },
   modules: {
   }

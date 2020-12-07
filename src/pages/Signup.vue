@@ -13,7 +13,7 @@
         <form class="signup-form" @submit="signup">
           <Loading
             :is-full-page="true"
-            :active="loading"
+            :active="this.$store.state.loading"
             :opacity="0.8"
             loader="dots"
             color="#3F3D56"
@@ -63,6 +63,7 @@
 <script>
 import { isEmpty } from "lodash";
 import Loading from "vue-loading-overlay";
+import "vue-loading-overlay/dist/vue-loading.css";
 
 export default {
   name: "Signup",
@@ -136,18 +137,14 @@ export default {
         !this.errors.password2
       ) {
         this.loading = true;
-        await this.$store
-          .dispatch("createUser", {
-            name: this.user.name,
-            email: this.user.email,
-            password: this.user.password,
-            telephone: "49999999999",
-            legalEntity: "fisica",
-            photo: "",
-          })
-          .finally(() => {
-            this.loading = false;
-          });
+        await this.$store.dispatch("createUser", {
+          name: this.user.name,
+          email: this.user.email,
+          password: this.user.password,
+          telephone: "49999999999",
+          legalEntity: "fisica",
+          photo: "",
+        });
       }
     },
   },

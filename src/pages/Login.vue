@@ -13,7 +13,7 @@
         <form class="login-form" @submit="login">
           <Loading
             :is-full-page="true"
-            :active="loading"
+            :active="this.$store.state.loading"
             :opacity="0.8"
             loader="dots"
             color="#3F3D56"
@@ -53,13 +53,16 @@
 
 <script>
 import { isEmpty } from "lodash";
+import Loading from "vue-loading-overlay";
+import "vue-loading-overlay/dist/vue-loading.css";
 
 export default {
   name: "Login",
-  components: {},
+  components: {
+    Loading,
+  },
   data() {
     return {
-      loading: false,
       user: {
         email: "",
         password: "",
@@ -103,9 +106,7 @@ export default {
       this.validFields();
       const { email, password } = this.user;
       if (!this.errors.email && !this.errors.password) {
-        this.loading = true;
         this.$store.dispatch("getUser", { user: { email, password } });
-        this.loading = false;
       }
     },
   },
