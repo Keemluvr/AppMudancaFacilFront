@@ -2,6 +2,16 @@
   <div>
     <div class="list-cards">
       <Card />
+      <Card />
+      <Card />
+      <Card />
+      <Card />
+      <Card />
+      <Card />
+      <Card />
+      <Card />
+      <Card />
+      <Card />
     </div>
   </div>
 </template>
@@ -26,8 +36,11 @@ export default {
 
 <style scoped>
 .list-cards {
-  margin: 0 5vw;
+  margin: 50px 5vw 0 50px;
   height: 100%;
-  background-color: yellow;
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  gap: 50px;
 }
 </style>

@@ -15,7 +15,7 @@
       </router-link>
 
       <router-link v-if="$store.state.isLogged" to="/perfil">
-        <img src="@/assets/icons/usuario.svg" class="icon-user" />
+        <img src="@/assets/icons/user.svg" class="icon-user" />
         {{ name }}
       </router-link>
 
