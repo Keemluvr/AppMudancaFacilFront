@@ -61,7 +61,6 @@ h1 {
 
 hr {
   border: 1px solid rgba(198, 198, 198, 0.5);
-
 }
 
 .dashboard-body {
