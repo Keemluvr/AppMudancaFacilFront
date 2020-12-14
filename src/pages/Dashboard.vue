@@ -35,17 +35,25 @@ export default {
       properties: null,
       loading: true,
       errored: false,
+      userId: this.$store.state.user._id,
     };
   },
   mounted() {
-    api
-      .get("/immobile/owner/5e8e57f08c4cc11fa011bf31")
-      .then((response) => (this.properties = response.data))
-      .catch((error) => {
-        console.log(error);
-        this.errored = true;
-      })
-      .finally(() => (this.loading = false));
+    if (this.userId != undefined) {
+      console.log(this.userId);
+      api
+        .get("/immobile/owner/5e8e57f08c4cc11fa011bf31")
+        .then((response) => (this.properties = response.data))
+        .catch((error) => {
+          console.log(error);
+          this.errored = true;
+        })
+        .finally(() => (this.loading = false));
+    } else {
+      this.loading = false;
+      this.errored = true;
+      console.log("Não está logado");
+    }
   },
 };
 </script>

@@ -10,7 +10,8 @@ export const stateUser = {
     legalEntity: "",
     telephone: ""
   },
-  loading: false
+  loading: false,
+  _id: "",
 }
 
 export const mutationsUser = {
@@ -34,7 +35,8 @@ export const actionsUser = {
         context.dispatch("getUser", {
           user: {
             email: data.user.email,
-            password: payload.password
+            password: payload.password,
+            _id: data.user._id
           },
           popupSuccess: {
             message: 'Cadastro realizado com sucesso!',
@@ -68,11 +70,10 @@ export const actionsUser = {
       // Login realizado com sucesso
       .then(response => {
         context.state.loading = false
-
-        const { name, email, legalEntity, telephone } = response.data.user
-
+        const { _id, name, email, legalEntity, telephone } = response.data.user
+        
         // Atualiza as variáveis de login
-        context.commit("UPDATE_USER", { name, email, legalEntity, telephone })
+        context.commit("UPDATE_USER", { _id, name, email, legalEntity, telephone })
         context.commit("UPDATE_LOGIN", true)
 
         // Mostra o popup que o login foi um sucesso
@@ -101,7 +102,7 @@ export const actionsUser = {
   /** Action para a o usuário deslogar da conta*/
   logOut(context) {
     // Atualiza as variáveis de login
-    context.commit("UPDATE_USER", { name: "", email: "", legalEntity: "", telephone: "" })
+    context.commit("UPDATE_USER", { id: "", name: "", email: "", legalEntity: "", telephone: "" })
     context.commit("UPDATE_LOGIN", false)
 
     // Mostra o popup que o logout foi um sucesso
