@@ -8,23 +8,24 @@
       }"
     ></div>
     <div class="infos">
-      <h2 class="title">ALUGUEL DE QUARTO RENOVAÇÃO A CADA 2 MESES</h2>
-      <h3 class="price">R$ 00,00</h3>
+      <h2 class="title">{{ content.title }}</h2>
+      <h3 class="price">R$ {{ content.price }}</h3>
       <div class="location">
         <img src="@/assets/icons/location.svg" class="icon-location" />
         <p class="desc-location">
-          Rua Comendador Araújo - Centro, Curitiba - PR
+          Rua {{ content.address.street }} - {{ content.address.neighborhood }},
+          {{ content.address.city }} - {{ content.address.state }}
         </p>
       </div>
       <div class="position-bottom">
         <div class="info-basics">
           <div class="bedroom">
             <img src="@/assets/icons/bedroom.svg" class="icon-bedroom" />
-            <p class="desc-bedroom">2 quartos</p>
+            <p class="desc-bedroom">{{content.availableRoom[2].amount}} {{content.availableRoom[2].name}}</p>
           </div>
           <div class="toilet">
             <img src="@/assets/icons/toilet.svg" class="icon-toilet" />
-            <p class="desc-toilet">2 banheiros</p>
+            <p class="desc-toilet">{{content.availableRoom[1].amount}} {{content.availableRoom[1].name}}</p>
           </div>
         </div>
         <div class="info-locator">
@@ -47,6 +48,10 @@
 <script>
 export default {
   name: "Card",
+  props: {
+    content: Object,
+    errored: Boolean,
+  },
   data: function () {
     return {};
   },
