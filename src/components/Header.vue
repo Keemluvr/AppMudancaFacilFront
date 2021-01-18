@@ -58,7 +58,7 @@ import { upperFirst } from "lodash";
 
 export default {
   name: "Header",
-  data: function () {
+  data: function() {
     return {
       mobileAberto: false,
     };
@@ -167,6 +167,7 @@ a + a {
   border-bottom: 1px solid rgba(198, 198, 198, 0.5);
   visibility: visible;
   opacity: 1;
+  z-index: 10000;
 }
 
 .menu > a {

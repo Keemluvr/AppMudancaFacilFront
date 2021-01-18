@@ -8,19 +8,27 @@
       :active="true"
     />
   </div>
-  <div v-else class="list-cards">
-    <Card
-      v-for="(immobile, index) in properties"
-      :key="index"
-      :content="immobile"
-      :errored="errored"
-    />
+  <div v-else class="homepage">
+    <div class="search">
+      <h1 class="title">Pesquisar imóvel</h1>
+      <input class="input" v-model="search" placeholder="casa de alvenaria" />
+      <button class="button" v-on:click="searchProperties">
+        Pesquisar Imóvel
+      </button>
+    </div>
+    <div class="list-cards">
+      <Card
+        v-for="(immobile, index) in this.$store.state.properties"
+        :key="index"
+        :content="immobile"
+        :errored="errored"
+      />
+    </div>
   </div>
 </template>
 
 <script>
 import Card from "@/components/Card.vue";
-import api from "../services/api.js";
 import Loading from "vue-loading-overlay";
 import "vue-loading-overlay/dist/vue-loading.css";
 
@@ -35,28 +43,88 @@ export default {
       properties: null,
       loading: true,
       errored: false,
+      search: null,
     };
   },
   mounted() {
-    api
-      .get("/immobile")
-      .then(
-        (response) => (
-          (this.properties = response.data.properties),
-          console.log(this.properties)
-        )
-      )
-      .catch((error) => {
-        console.log(error);
-        this.errored = true;
+    this.$store
+      .dispatch("getProperties", {
+        search: null,
+        filter: null,
       })
-      .finally(() => (this.loading = false));
+      .then(() => (this.loading = false));
+  },
+  methods: {
+    searchProperties: function () {
+      this.loading = true;
+      this.$store
+        .dispatch("getProperties", {
+          search: this.search,
+          filter: "title",
+        })
+        .then(() => (this.loading = false));
+    },
   },
 };
 </script>
 
-
 <style scoped>
+.search {
+  margin: 50px 10vw 170px 50px;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.title {
+  color: #4976ef;
+  font-family: "Poppins", sans-serif;
+  font-size: 2.5rem;
+}
+
+.input {
+  width: 100%;
+  max-width: 800px;
+  height: 40px;
+  border-radius: 4px;
+  padding: 2px 0 2px 12px;
+  border: 1.5px solid #c6c6c6;
+  transition: all 0.4s ease-in-out;
+  margin-top: 50px;
+}
+
+.input:focus {
+  outline: none;
+  border: 1.5px solid #4976ef;
+}
+
+.button {
+  max-width: 500px;
+  color: #4976ef;
+  min-height: 45px;
+  margin-top: 50px;
+  width: 102%;
+  border: 1px solid #4976ef;
+  border-radius: 5px;
+  font-weight: 400;
+  font-size: 15px;
+  font-family: "Roboto", sans-serif;
+  letter-spacing: 0.6px;
+  background-color: transparent;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+  transform: scale(1);
+}
+
+.button:hover {
+  font-weight: 400;
+  color: white;
+  background-color: #4976ef;
+  transform: scale(1.02);
+}
+
 .list-cards {
   margin: 50px 5vw 0 50px;
   height: 100%;
@@ -64,5 +132,21 @@ export default {
   justify-content: space-around;
   flex-wrap: wrap;
   gap: 50px;
+}
+
+@media (max-width: 1365px) {
+  .list-cards {
+    margin: 50px 10vw 0 50px;
+    gap: 10px;
+  }
+}
+
+@media (max-width: 500px) {
+  .title {
+    font-size: 1.5rem;
+  }
+  .search {
+    margin-bottom: 90px;
+  }
 }
 </style>

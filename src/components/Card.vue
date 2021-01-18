@@ -21,11 +21,17 @@
         <div class="info-basics">
           <div class="bedroom">
             <img src="@/assets/icons/bedroom.svg" class="icon-bedroom" />
-            <p class="desc-bedroom">{{content.availableRoom[2].amount}} {{content.availableRoom[2].name}}</p>
+            <p class="desc-bedroom">
+              {{ content.availableRoom[2].amount }}
+              {{ content.availableRoom[2].name }}
+            </p>
           </div>
           <div class="toilet">
             <img src="@/assets/icons/toilet.svg" class="icon-toilet" />
-            <p class="desc-toilet">{{content.availableRoom[1].amount}} {{content.availableRoom[1].name}}</p>
+            <p class="desc-toilet">
+              {{ content.availableRoom[1].amount }}
+              {{ content.availableRoom[1].name }}
+            </p>
           </div>
         </div>
         <div class="info-locator">
@@ -52,7 +58,7 @@ export default {
     content: Object,
     errored: Boolean,
   },
-  data: function () {
+  data: function() {
     return {};
   },
 };
