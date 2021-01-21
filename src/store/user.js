@@ -5,13 +5,13 @@ import { loginUser, createUser } from "@/services/users"
 export const stateUser = {
   isLogged: false,
   user: {
+    _id: "",
     name: "",
     email: "",
     legalEntity: "",
     telephone: ""
   },
   loading: false,
-  _id: "",
 }
 
 export const mutationsUser = {
@@ -20,7 +20,7 @@ export const mutationsUser = {
   },
   UPDATE_USER(state, payload) {
     state.user = payload
-  },
+  }
 }
 
 export const actionsUser = {
@@ -73,8 +73,10 @@ export const actionsUser = {
         const { _id, name, email, legalEntity, telephone } = response.data.user
         
         // Atualiza as variáveis de login
-        context.commit("UPDATE_USER", { _id, name, email, legalEntity, telephone })
+        const newUser = { _id, name, email, legalEntity, telephone }
+        context.commit("UPDATE_USER", newUser)
         context.commit("UPDATE_LOGIN", true)
+        localStorage.setItem("MF_USER", JSON.stringify(newUser));
 
         // Mostra o popup que o login foi um sucesso
         Vue.$toast.open(payload.popupSuccess ? payload.popupSuccess : {
@@ -99,11 +101,23 @@ export const actionsUser = {
       })
   },
 
+  persistUser(context) {
+    const user = JSON.parse(localStorage.getItem("MF_USER"));
+    if(user) {
+      context.commit("UPDATE_USER", user)
+      context.commit("UPDATE_LOGIN", true)
+    }
+  },
+
   /** Action para a o usuário deslogar da conta*/
   logOut(context) {
     // Atualiza as variáveis de login
     context.commit("UPDATE_USER", { id: "", name: "", email: "", legalEntity: "", telephone: "" })
     context.commit("UPDATE_LOGIN", false)
+    localStorage.removeItem("MF_USER");
+
+    // Redireciona o usuário para a tela inicial
+    router.push('/')
 
     // Mostra o popup que o logout foi um sucesso
     Vue.$toast.open({

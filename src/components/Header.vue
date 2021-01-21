@@ -42,12 +42,12 @@
 
       <div class="menu">
         <!-- Deslogado -->
-        <router-link to="/login"> Entrar </router-link>
+        <router-link v-if="!$store.state.isLogged" to="/login"> Entrar </router-link>
 
         <!-- Logado -->
-        <router-link to="/meus-imoveis"> Meus Imóveis </router-link>
-        <router-link to="/perfil"> Perfil </router-link>
-        <router-link to="/"> Sair </router-link>
+        <router-link v-if="$store.state.isLogged" to="/meus-imoveis"> Meus Imóveis </router-link>
+        <router-link v-if="$store.state.isLogged" to="/perfil"> Perfil </router-link>
+        <router-link v-if="$store.state.isLogged" to="/" @click.native="logOut"> Sair </router-link>
       </div>
     </nav>
   </header>
@@ -74,6 +74,7 @@ export default {
     },
     logOut() {
       this.$store.dispatch("logOut");
+      this.mobileAberto = false
     },
   },
 };

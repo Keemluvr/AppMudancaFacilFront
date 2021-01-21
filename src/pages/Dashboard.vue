@@ -10,7 +10,7 @@
   </div>
   <div v-else class="list-items">
     <Item
-      v-for="(immobile, index) in properties"
+      v-for="(immobile, index) in JSON.parse(JSON.stringify(this.$store.state.propertiesByOwner))"
       :key="index"
       :content="immobile"
       :errored="errored"
@@ -20,7 +20,6 @@
 
 <script>
 import Item from "../components/Item.vue";
-import api from "../services/api.js";
 import Loading from "vue-loading-overlay";
 import "vue-loading-overlay/dist/vue-loading.css";
 
@@ -32,29 +31,17 @@ export default {
   },
   data() {
     return {
-      properties: null,
       loading: true,
       errored: false,
-      userId: this.$store.state.user._id,
     };
   },
-  mounted() {
-    if (this.userId != undefined) {
-      console.log(this.userId);
-      api
-        .get("/immobile/owner/5e8e57f08c4cc11fa011bf31")
-        .then((response) => (this.properties = response.data))
-        .catch((error) => {
-          console.log(error);
-          this.errored = true;
-        })
-        .finally(() => (this.loading = false));
-    } else {
-      this.loading = false;
-      this.errored = true;
-      console.log("Não está logado");
+  async mounted() {
+    this.loading = true;
+    if (JSON.parse(localStorage.getItem("MF_USER"))._id) {
+      await this.$store.dispatch("getPropertiesByOwner", JSON.parse(localStorage.getItem("MF_USER"))._id) 
     }
-  },
+    this.loading = false;
+  }
 };
 </script>
 

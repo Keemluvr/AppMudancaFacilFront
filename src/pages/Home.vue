@@ -24,11 +24,19 @@
         :errored="errored"
       />
     </div>
+    <pagination
+      v-if="this.$store.state.properties.length"
+      :offset="offset"
+      :total="total"
+      :limit="limit"
+      @change-page="changePage"
+    />
   </div>
 </template>
 
 <script>
 import Card from "@/components/Card.vue";
+import Pagination from "@/components/Pagination.vue";
 import Loading from "vue-loading-overlay";
 import "vue-loading-overlay/dist/vue-loading.css";
 
@@ -36,6 +44,7 @@ export default {
   name: "Home",
   components: {
     Card,
+    Pagination,
     Loading,
   },
   data() {
@@ -44,6 +53,9 @@ export default {
       loading: true,
       errored: false,
       search: null,
+      offset: 0,
+      limit: 5,
+      total: 0,
     };
   },
   mounted() {
@@ -52,7 +64,10 @@ export default {
         search: null,
         filter: null,
       })
-      .then(() => (this.loading = false));
+      .then(() => {
+        this.total = this.$store.state.lengthProperties;
+        this.loading = false;
+      });
   },
   methods: {
     searchProperties: function () {
@@ -61,8 +76,14 @@ export default {
         .dispatch("getProperties", {
           search: this.search,
           filter: "title",
+          limit: this.limit,
+          page: this.offset,
         })
         .then(() => (this.loading = false));
+    },
+    changePage(value) {
+      this.offset = value;
+      this.searchProperties();
     },
   },
 };
