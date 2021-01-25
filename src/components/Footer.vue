@@ -13,6 +13,7 @@ export default {
 <style scoped>
 footer {
   position: relative;
+  margin-top: 50px;
 }
 .circle-bottom {
   margin-left: -60px;

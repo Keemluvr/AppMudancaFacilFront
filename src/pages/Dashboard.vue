@@ -156,7 +156,6 @@ export default {
   .list-items {
     justify-content: center;
     margin: 50px 0 0 0;
-
   }
 }
 </style>

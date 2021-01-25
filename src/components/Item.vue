@@ -1,5 +1,5 @@
 <template>
-  <router-link tag="div" class="content" :to="'/'+convertToMD5(content._id)">
+  <router-link tag="div" class="content" :to="'/immobile/'+content._id">
     <div
       class="image"
       :style="{
@@ -9,7 +9,7 @@
     ></div>
     <div class="infos">
       <h2 class="title">{{ content.title }}</h2>
-      <h3 class="price">R$ {{ content.price }}</h3>
+      <h3 class="price">{{ content.price | currency }}</h3>
       <h4 class="description">{{ content.description }}</h4>
       <div class="location">
         <img src="@/assets/icons/location.svg" class="icon-location" />
@@ -30,23 +30,43 @@
           </div>
         </div>
       </div>
-    </div>
+      <div v-if="showLocator" class="info-locator">
+        <p class="locator">LOCADOR</p>
+        <div class="locator-wrapper">
+          <img src="@/assets/icons/user.svg" class="icon-locator" />
+            <div class="desc-locator">
+              <p class="name-locator">Joãozinho</p>
+              <a class="tel-locator" href="tel:+55499999999999">
+                +55 49 99999-99999
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
   </router-link>
 </template>
 
 <script>
-import md5 from "md5";
 export default {
   name: "Item",
   props: {
+    showLocator: Boolean,
     content: Object,
     errored: Boolean,
   },
-  methods: {
-    convertToMD5(id) {
-      return md5(id);
-    },
-  },
+   filters: {
+    currency: function (value) {
+      if (typeof value !== "number") {
+        return value;
+      }
+      let formatter = new Intl.NumberFormat('pt-BR', {
+          style: 'currency',
+          currency: 'BRL',
+          minimumFractionDigits: 0
+      });
+      return formatter.format(value);
+    }
+  }
 };
 </script>
 

@@ -114,6 +114,7 @@ video {
   font-weight: 400;
   color: #4a4a55;
   vertical-align: baseline;
+  font-family: "Poppins", sans-serif;
 }
 /* HTML5 display-role reset for older browsers */
 article,

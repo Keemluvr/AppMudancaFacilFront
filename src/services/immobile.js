@@ -12,3 +12,5 @@ export const listProperties = ({ search, filter }) => {
 };
 
 export const listPropertiesByOwner = ownerId => api.get(`/immobile/owner/${ownerId}`);
+
+export const listImmobileById = immobileId => api.get(`/immobile/${immobileId}`);

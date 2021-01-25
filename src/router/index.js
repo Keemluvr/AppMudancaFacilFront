@@ -4,6 +4,7 @@ import Home from '../views/Home.vue'
 import Signup from '../views/Signup.vue'
 import Login from '../views/Login.vue'
 import Dashboard from '../views/Dashboard.vue'
+import Immobile from '../views/Immobile.vue'
 
 Vue.use(VueRouter)
 
@@ -27,6 +28,11 @@ const routes = [
     path: '/meus-imoveis',
     name: 'Dashboard',
     component: Dashboard
+  },
+  {
+    path: '/immobile/:id',
+    name: 'Immobile',
+    component: Immobile
   }
 ]
 

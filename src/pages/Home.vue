@@ -17,11 +17,12 @@
       </button>
     </div>
     <div class="list-cards">
-      <Card
+      <Item
         v-for="(immobile, index) in this.$store.state.properties"
         :key="index"
         :content="immobile"
         :errored="errored"
+        :showLocator="true"
       />
     </div>
     <pagination
@@ -35,7 +36,7 @@
 </template>
 
 <script>
-import Card from "@/components/Card.vue";
+import Item from "@/components/Item.vue";
 import Pagination from "@/components/Pagination.vue";
 import Loading from "vue-loading-overlay";
 import "vue-loading-overlay/dist/vue-loading.css";
@@ -43,7 +44,7 @@ import "vue-loading-overlay/dist/vue-loading.css";
 export default {
   name: "Home",
   components: {
-    Card,
+    Item,
     Pagination,
     Loading,
   },
@@ -84,7 +85,7 @@ export default {
     changePage(value) {
       this.offset = value;
       this.searchProperties();
-    },
+    }
   },
 };
 </script>

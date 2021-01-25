@@ -1,11 +1,13 @@
 import Vue from "vue";
-import { listProperties, listPropertiesByOwner } from "@/services/immobile";
+import { listProperties, listPropertiesByOwner, listImmobileById } from "@/services/immobile";
 
 export const stateImmobile = {
   properties: [],
   propertiesByOwner: [],
   loadingProperties: false,
   lengthProperties: 0,
+  immobile: {},
+  loadingImmobile: false,
 };
 
 export const mutationsImmobile = {
@@ -14,6 +16,9 @@ export const mutationsImmobile = {
   },
   LIST_PROPERTIES_BY_OWNER(state, payload) {
     state.propertiesByOwner = payload;
+  },
+  GET_IMMOBILE_BY_ID(state, payload) {
+    state.immobile = payload;
   },
 };
 
@@ -59,6 +64,32 @@ export const actionsImmobile = {
       .catch(({ response }) => {
         context.state.loadingProperties = false;
         // Mostra o popup que houve um erro ao listar propriedades
+        Vue.$toast.open(
+          payload.popupError
+            ? payload.popupError
+            : {
+                message: response.data.error,
+                type: "error",
+                position: "top-right",
+              }
+        );
+      });
+  },
+
+   // Lista o imóvel pelo seu id
+   getImmobileById(context, payload) {
+    context.state.loadingImmobile = true;
+    listImmobileById(payload)
+      // Imóvel encontrado com sucesso
+      .then((response) => {
+        console.log(JSON.parse(JSON.stringify(response.data.immobile)))
+        context.state.loadingImmobile = false;
+        context.commit("GET_IMMOBILE_BY_ID", response.data.immobile);
+      })
+      // Erro ao procurar imóvel
+      .catch(({ response }) => {
+        context.state.loadingImmobile = false;
+        // Mostra o popup que houve um erro ao encontrar imóvel
         Vue.$toast.open(
           payload.popupError
             ? payload.popupError
