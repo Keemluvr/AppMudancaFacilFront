@@ -26,10 +26,9 @@
       />
     </div>
     <paginate
-      :page-count="5"
-      :page-range="3"
-      :margin-pages="2"
-      :click-handler="clickCallback"
+      v-model="page"
+      :page-count="this.$store.state.lengthPagesProperties"
+      :click-handler="changePage"
       :prev-text="'Anterior'"
       :next-text="'Próximo'"
       :container-class="'pagination'"
@@ -55,10 +54,7 @@ export default {
       loading: true,
       errored: false,
       search: null,
-      offset: 0,
-      limit: 5,
-      total: 0,
-      currentPage: 1
+      page: ~this.$store.state.currentPageProperties || 1,
     };
   },
   mounted() {
@@ -68,28 +64,27 @@ export default {
         filter: null,
       })
       .then(() => {
-        this.total = this.$store.state.lengthProperties;
         this.loading = false;
       });
   },
   methods: {
     searchProperties: function () {
-      this.loading = true;
+      this.loading = true
       this.$store
         .dispatch("getProperties", {
           search: this.search,
           filter: "title",
-          limit: this.limit,
-          page: this.offset,
+          page: this.page,
         })
-        .then(() => (this.loading = false));
+        .then(() => (this.loading = false))
     },
-    changePage(value) {
-      this.offset = value;
-      this.searchProperties();
+    async changePage(value) {
+      this.page = await value 
+      this.searchProperties()
+      this.scrollToTop()
     },
-    clickCallback(pageNum) {
-      console.log(pageNum)
+    scrollToTop() {
+      window.scrollTo({top: 0, behavior: 'smooth'})
     }
   },
 };

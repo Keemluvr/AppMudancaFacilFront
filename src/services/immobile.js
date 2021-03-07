@@ -1,14 +1,14 @@
 import api from "./api";
 
-export const listProperties = ({ search, filter }) => {
+export const listProperties = ({ search, filter, page = 1, limit = 5 }) => {
   return search && filter
-    ? api.get("/properties", {
+    ? api.get(`/properties?page=${page}&limit=${limit}`, {
         params: {
           search,
           filter,
         },
       })
-    : api.get("/properties");
+    : api.get(`/properties?page=${page}&limit=${limit}`);
 };
 
 export const listPropertiesByOwner = ownerId => api.get(`/immobile/owner/${ownerId}`);

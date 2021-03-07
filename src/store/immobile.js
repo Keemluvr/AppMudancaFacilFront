@@ -5,7 +5,8 @@ export const stateImmobile = {
   properties: [],
   propertiesByOwner: [],
   loadingProperties: false,
-  lengthProperties: 0,
+  lengthPagesProperties: 0,
+  currentPageProperties: 1,
   immobile: {},
   loadingImmobile: false,
 };
@@ -30,7 +31,8 @@ export const actionsImmobile = {
       // Listagem realizada com sucesso
       .then((response) => {
         context.state.loadingProperties = false;
-        context.state.lengthProperties = response.data.properties.length;
+        context.state.lengthPagesProperties = response.data.totalPages;
+        context.state.currentPageProperties = ~response.data.currentPage;
         // Atualiza as variáveis de login
         context.commit("LIST_PROPERTIES", response.data.properties);
       })
@@ -82,7 +84,6 @@ export const actionsImmobile = {
     listImmobileById(payload)
       // Imóvel encontrado com sucesso
       .then((response) => {
-        console.log(JSON.parse(JSON.stringify(response.data.immobile)))
         context.state.loadingImmobile = false;
         context.commit("GET_IMMOBILE_BY_ID", response.data.immobile);
       })
