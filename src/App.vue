@@ -186,4 +186,47 @@ table {
 .v-toast__text {
   color: white !important;
 }
+
+.pagination {
+  display: flex;
+  justify-content: flex-end;
+  margin: 50px 6vw 0 50px;
+}
+
+.pagination > li {
+  display: flex;
+  min-width: 20px;
+  width: auto;
+  text-align: center;
+  border: 1px solid #DDDDDD;
+}
+
+.pagination > li:hover > a {
+  color: #4976EF;
+}
+
+.pagination > .page-item.active:hover > a {
+  color: white !important;
+}
+
+.pagination > li > a {
+  display: block;
+  width: 100%;  
+  height: 100%;
+  padding: 7px 15px;;
+}
+
+.page-item.active {
+  background-color: #4976EF;
+}
+
+.page-item.active > a {
+  color: white;
+}
+
+.pagination > li:focus,
+.pagination > li > a:focus {
+  outline-width: 0;
+}
+
 </style>

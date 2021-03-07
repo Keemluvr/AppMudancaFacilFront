@@ -25,19 +25,21 @@
         :showLocator="true"
       />
     </div>
-    <pagination
-      v-if="this.$store.state.properties.length"
-      :offset="offset"
-      :total="total"
-      :limit="limit"
-      @change-page="changePage"
-    />
+    <paginate
+      :page-count="5"
+      :page-range="3"
+      :margin-pages="2"
+      :click-handler="clickCallback"
+      :prev-text="'Anterior'"
+      :next-text="'Próximo'"
+      :container-class="'pagination'"
+      :page-class="'page-item'">
+    </paginate>
   </div>
 </template>
 
 <script>
 import Item from "@/components/Item.vue";
-import Pagination from "@/components/Pagination.vue";
 import Loading from "vue-loading-overlay";
 import "vue-loading-overlay/dist/vue-loading.css";
 
@@ -45,7 +47,6 @@ export default {
   name: "Home",
   components: {
     Item,
-    Pagination,
     Loading,
   },
   data() {
@@ -57,6 +58,7 @@ export default {
       offset: 0,
       limit: 5,
       total: 0,
+      currentPage: 1
     };
   },
   mounted() {
@@ -85,6 +87,9 @@ export default {
     changePage(value) {
       this.offset = value;
       this.searchProperties();
+    },
+    clickCallback(pageNum) {
+      console.log(pageNum)
     }
   },
 };
