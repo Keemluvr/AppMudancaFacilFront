@@ -40,6 +40,9 @@
     <div v-else-if="showLeased" class="list-items">
       Em construção
     </div>
+    <button class="btn-add-property" @click="goToPropertyRegistration()">
+      Cadastrar imóvel
+    </button>
     <Footer/>
   </div>
 </template>
@@ -73,6 +76,9 @@ export default {
     showLeasedItems: function () {
      this.showPublished = false
      this.showLeased = true
+    },
+    goToPropertyRegistration: function () {
+      this.$router.push({ name: 'NewProperty' }); 
     }
   },
   async mounted() {
@@ -139,6 +145,24 @@ export default {
 }
 .active {
   color: #4976EF;
+}
+.btn-add-property {
+  background-color: #4976EF;
+  border: 0px;
+  border-radius: 25px;
+  padding: 15px;
+  color: white;
+  font-weight: 400;
+  letter-spacing: .6px;
+  transform: scale(1);
+  transition: transform .5s ease;
+  position: fixed;
+  right: 20px;
+  bottom: 50px;
+}
+.btn-add-property:hover {
+  cursor: pointer;
+  transform: scale(1.1);
 }
 @media (max-width: 450px) {
   .header {

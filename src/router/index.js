@@ -5,6 +5,7 @@ import Signup from '../views/Signup.vue'
 import Login from '../views/Login.vue'
 import Dashboard from '../views/Dashboard.vue'
 import Immobile from '../views/Immobile.vue'
+import NewProperty from '../views/PropertyRegistration.vue'
 
 Vue.use(VueRouter)
 
@@ -33,6 +34,11 @@ const routes = [
     path: '/immobile/:id',
     name: 'Immobile',
     component: Immobile
+  },
+  {
+    path: '/new-property',
+    name: 'NewProperty',
+    component: NewProperty
   }
 ]
 

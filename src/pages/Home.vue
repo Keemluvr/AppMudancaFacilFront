@@ -92,7 +92,7 @@ export default {
 
 <style scoped>
 .search {
-  margin: 50px 10vw 170px 50px;
+  margin: 50px 10vw 170px 10vw;
   text-align: center;
   display: flex;
   justify-content: center;
