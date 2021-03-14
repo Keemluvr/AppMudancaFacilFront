@@ -1,58 +1,75 @@
 <template>
   <div class="body">
-    <h1 class="title">Cadastro de imóvel</h1>
-    <label class="label-btn-group" for="type-sale">Você gostaria de:</label>
-    <div class="btn-group" id="type-sale" >
-      <button v-bind:class="selectToSell" @click="changeBusinessType">
-        Alugar
-      </button>
-      <button v-bind:class="selectToHire" @click="changeBusinessType">
-        Vender
-      </button>
-    </div>
-    <span class="message-error" v-if="errors.businessType">
-      Tipo de negócio é obrigatório.
-    </span>
+    <div v-if="this.$store.state.newImmobileCurrentStep === 0">
+      <h1 class="title">Cadastro de imóvel</h1>
+      <label class="label-btn-group" for="type-sale">Você gostaria de:</label>
+      <div class="btn-group" id="type-sale" >
+        <button v-bind:class="selectToSell" @click="changeBusinessType">
+          Alugar
+        </button>
+        <button v-bind:class="selectToHire" @click="changeBusinessType">
+          Vender
+        </button>
+      </div>
+      <span class="message-error" v-if="errors.businessType">
+        Tipo de negócio é obrigatório.
+      </span>
 
-    <div class="input">
-      <label for="title">Título</label>
-      <input id="title" v-model="property.title" placeholder="Casa de Anvenaria"/>
-    </div>
-    <span class="message-error" v-if="errors.title">
-      Título é obrigatório.
-    </span>
+      <div class="input">
+        <label for="title">Título</label>
+        <input id="title" v-model="property.title" placeholder="Casa de Anvenaria"/>
+      </div>
+      <span class="message-error" v-if="errors.title">
+        Título é obrigatório.
+      </span>
 
-    <div class="select">
-      <label for="category">Selecione uma categoria</label>
-      <select id="category" v-model="property.category">
-        <option 
-          v-for="({name, value}, index) in categories" 
-          :key="index" 
-          :value="value">
-          {{name}}
-        </option>
-      </select>
-    </div>
-    <span class="message-error" v-if="errors.category">
-      Categoria é obrigatório.
-    </span>
+      <div class="select">
+        <label for="category">Selecione uma categoria</label>
+        <select id="category" v-model="property.category">
+          <option 
+            v-for="({name, value}, index) in categories" 
+            :key="index" 
+            :value="value">
+            {{name}}
+          </option>
+        </select>
+      </div>
+      <span class="message-error" v-if="errors.category">
+        Categoria é obrigatório.
+      </span>
 
-    <button class="next" @click="save">Próxima Etapa</button>
+      <button class="next" @click="save">Próxima Etapa</button>
+      <div class="circle-1"></div>
+      <div class="circle-2"></div>
+      <div v-if="loading">
+        <Loading
+          :is-full-page="true"
+          :opacity="0.8"
+          loader="dots"
+          color="#3F3D56"
+          :active="true"
+        />
+      </div>
+    </div>
+    <StepOne v-else-if="this.$store.state.newImmobileCurrentStep === 1"/>
   </div>
 </template>
 
 <script>
-// import Loading from "vue-loading-overlay";
-// import "vue-loading-overlay/dist/vue-loading.css";
-import { isNull, lowerCase } from "lodash";
+import Loading from "vue-loading-overlay"
+import "vue-loading-overlay/dist/vue-loading.css"
+import { isNull, lowerCase } from "lodash"
+import StepOne from './StepOne'
 
 export default {
   name: "Dashboard",
   components: {
-    // Loading,
+    Loading,
+    StepOne
   },
   data() {
     return {
+      loading: true,
       selectTypeProperty: null,
       categories: [
         {name: "Aluguel de Quarto", value: "aluguel de quarto"},
@@ -74,7 +91,7 @@ export default {
     };
   },
   methods: {
-    validFields: function () {
+    validFields () {
       event.preventDefault();
       const { title, category, businessType } = this.property;
 
@@ -87,20 +104,27 @@ export default {
       isNull(businessType)
         ? (this.errors.businessType = true)
         : (this.errors.businessType = false)
+
+      this.loading = false
     },
-    updateCategory: function (a) {
-      console.log(a)
-    },
-    changeBusinessType: function (e) {
+    changeBusinessType (e) {
       this.selectTypeProperty = e.target.outerText
       this.property.businessType = lowerCase(e.target.outerText)
     },
-    save: function () {
-      this.validFields()
-      console.log(this.property, this.errors)
+    async save () {
+      this.loading = true
+      await this.validFields()
+      if(
+        !isNull(this.property.title) && 
+        !isNull(this.property.category) &&
+        !isNull(this.property.businessType)
+      ) {
+        this.$store.dispatch("setFirstStep", this.property)
+        this.loading = false
+      }
     }
   },
-   watch: {
+  watch: {
     "property.title"(value) {
       isNull(value) 
         ? (this.errors.title = true)
@@ -130,21 +154,43 @@ export default {
         'btn-right' : true
       }
     }
+  },
+  async mounted() {
+    this.loading = false
   }
-
 };
 </script>
 
 <style scoped>
 .body {
-  margin: 50px 10vw 170px 10vw;
+  margin: 50px 10vw 0px 10vw;
+  z-index: 2;
+}
+.circle-1 {
+  content: url('../../assets/images/ellipse-left.png'); 
+  position: absolute;
+  width: auto;
+  height: auto;
+  right: 0px;
+  top: 80px;
+  z-index: 1;
+}
+.circle-2 {
+  content: url('../../assets/images/ellipse-footer.png'); 
+  position: absolute;
+  width: 150px;
+  height: auto;
+  left: 0px;
+  bottom: 0px;
+  z-index: 1;
 }
 .title {
   text-align: center;
   color: #4976ef;
   font-family: "Poppins", sans-serif;
   font-size: 2.5rem;
-  margin-bottom: 50px;
+  margin: 60px 0;
+  z-index: 10;
 }
 .label-btn-group {
   font-weight: 600;
@@ -190,7 +236,9 @@ export default {
   flex-direction: column;
   position: relative;
   height: 60px;
-  margin-top: 30px;
+  margin-top: 50px;
+  background: white;
+  -webkit-appearance: none;
 }
 .input > label,
 .select > label {
@@ -200,6 +248,7 @@ export default {
   margin-left: 15px;
   padding: 0 8px 0 4px;
   font-size: 16px;
+
 }
 .input > input, 
 .select > select {
@@ -210,7 +259,7 @@ export default {
   position: absolute;
   border-radius: 4px;
   padding: 5px 0 0 20px;
-  border: 1.5px solid #c6c6c6;
+  border: 1px solid #c6c6c6;
   transition: all 0.4s ease-in-out;
 }
 .select > select {
@@ -248,5 +297,16 @@ button.next:hover {
   color: red;
   font-size: 15px;
   padding-top: 10px;
+}
+@media (max-width: 700px) {
+  .circle-1 {
+    display: none;
+  }
+  .circle-2 {
+    display: none;
+  }
+  .title {
+    margin: 0px 0px 50px 0px;
+  }
 }
 </style>

@@ -141,6 +141,7 @@ blockquote,
 q {
   quotes: none;
 }
+
 blockquote:before,
 blockquote:after,
 q:before,
@@ -148,15 +149,18 @@ q:after {
   content: "";
   content: none;
 }
+
 table {
   border-collapse: collapse;
   border-spacing: 0;
 }
+
 .app {
   display: flex;
   flex-direction: column;
   min-height: 75vh;
 }
+
 .main {
   flex: 1;
 }

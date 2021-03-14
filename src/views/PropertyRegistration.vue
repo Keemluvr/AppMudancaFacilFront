@@ -15,7 +15,7 @@ export default {
   name: "Dashboard",
   components: {
     Header,
-    Body,
+    Body
   },
 };
 </script>

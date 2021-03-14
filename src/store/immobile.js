@@ -9,6 +9,12 @@ export const stateImmobile = {
   currentPageProperties: 1,
   immobile: {},
   loadingImmobile: false,
+  newImmobileCurrentStep: 0,
+  newImmobile: {
+    title: null,
+    category: null,
+    businessType: null
+  },
 };
 
 export const mutationsImmobile = {
@@ -78,8 +84,8 @@ export const actionsImmobile = {
       });
   },
 
-   // Lista o imóvel pelo seu id
-   getImmobileById(context, payload) {
+  // Lista o imóvel pelo seu id
+  getImmobileById(context, payload) {
     context.state.loadingImmobile = true;
     listImmobileById(payload)
       // Imóvel encontrado com sucesso
@@ -102,4 +108,10 @@ export const actionsImmobile = {
         );
       });
   },
+
+  // Preenche primeira parte do formulário
+  setFirstStep(context, payload) {
+    context.state.newImmobile = payload
+    context.state.newImmobileCurrentStep = 1
+  }
 };
