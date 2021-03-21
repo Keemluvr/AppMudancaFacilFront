@@ -90,6 +90,130 @@
       </div>
     </div>
 
+    <!-- Área -->
+    <div class="item area">
+      <p>Tamanho (m²)</p>
+      <!-- Área útil -->
+      <div class="input">
+        <label for="usefulArea">Área útil</label>
+        <input id="usefulArea" v-model="property.size.usefulArea"  @keypress="onlyDecimal"/>
+      </div>
+      <span class="message-error" v-if="errors.size.usefulArea">
+        Área útil é obrigatório.
+      </span>
+
+      <!-- Área total -->
+      <div class="input totalArea">
+        <label for="totalArea">Área total (opcional)</label>
+        <input id="totalArea" v-model="property.size.totalArea"  @keypress="onlyDecimal"/>
+      </div>
+    </div>
+
+    <!-- Ar-condicionado -->
+     <div class="item airConditioning">
+      <p>Ar-condicionado</p>
+      <input type="radio" id="yes-airConditioning" name="airConditioning" 
+        :value="true" 
+        class="radio"
+        v-model="property.airConditioning">
+      <label for="yes-airConditioning" class="radio-label">Sim</label><br>
+      <input type="radio" id="no-airConditioning" name="airConditioning" 
+        :value="false" 
+        class="radio" 
+        checked
+        v-model="property.airConditioning">
+      <label for="no-airConditioning" class="radio-label">Não</label><br>  
+    </div>
+
+    <!-- Wi-fi e mais -->
+    <div class="item wifiAndMore">
+      <p>Wi-fi e mais</p>
+
+      <div class="room">
+        <input 
+        type="checkbox" 
+        name="" 
+        id="wifi" 
+        :value="!property.wifiMore.wifi"
+        v-model="property.wifiMore.wifi">
+        <label for="wifi">Wi-fi</label>
+      </div>
+
+      <div class="room">
+        <input 
+        type="checkbox" 
+        name="" 
+        id="landline" 
+        :value="!property.wifiMore.landline"
+        v-model="property.wifiMore.landline">
+        <label for="landline">TV a cabo</label>
+      </div>
+
+      <div class="room">
+        <input 
+        type="checkbox" 
+        name="" 
+        id="internet" 
+        :value="!property.wifiMore.internet"
+        v-model="property.wifiMore.internet">
+        <label for="internet">Internet</label>
+      </div>
+      
+    </div>
+
+    <!-- Permitido animais -->
+    <div class="item petFriendly">
+      <p>Permitido animais</p>
+      <input type="radio" id="yes-petFriendly" name="petFriendly" 
+        :value="true" 
+        class="radio"
+        v-model="property.petFriendly">
+      <label for="yes-petFriendly" class="radio-label">Sim</label><br>
+      <input type="radio" id="no-petFriendly" name="petFriendly" 
+        :value="false" 
+        class="radio" 
+        checked
+        v-model="property.petFriendly">
+      <label for="no-petFriendly" class="radio-label">Não</label><br>  
+    </div>
+
+    <!-- Permitido smookingPermitted -->
+    <div class="item furnished">
+      <p>Permitido fumantes</p>
+      <input type="radio" id="yes-smookingPermitted" name="smookingPermitted" 
+        value="sim" 
+        class="radio"
+        v-model="property.smookingPermitted">
+      <label for="yes-smookingPermitted" class="radio-label">Sim</label><br>
+      <input type="radio" id="no-smookingPermitted" name="smookingPermitted" 
+        value="nao" 
+        class="radio" 
+        checked
+        v-model="property.smookingPermitted">
+      <label for="no-smookingPermitted" class="radio-label">Não</label><br>  
+      <input type="radio" id="only-smookingPermitted" name="smookingPermitted" 
+        value="apenas ar livre" 
+        class="radio" 
+        checked
+        v-model="property.smookingPermitted">
+      <label for="only-smookingPermitted" class="radio-label">Apenas ao ar livre</label><br>  
+    </div>
+
+    <!-- Fotos -->
+    <div class="item photos">
+      <p>Fotos</p>
+      <h1>Para fazer</h1>
+    </div>
+
+    <!-- Descrição -->
+    <div class="item description">
+      <p>Descrição</p>
+      <textarea rows="5" v-model="property.description" maxlength="600">
+      </textarea>
+    </div>
+
+    <button class="next" @click="save">Próxima Etapa</button>
+
     <div v-if="loading">
       <Loading
         :is-full-page="true"
@@ -112,7 +236,7 @@ export default {
   name: "Dashboard",
   components: {
     Loading,
-    TabsMenu
+    TabsMenu,
   },
   data() {
     return {
@@ -125,10 +249,23 @@ export default {
           included: false
         },
         availableRoom: [],
-        buildingAmenities: {}
+        size: {
+          usefulArea: null,
+          totalArea: null,
+        },
+        airConditioning: false,
+        wifiMore: {
+          wifi: false,
+          internet: false,
+          landline: false
+        },
+        petFriendly: false,
+        smookingPermitted: false
       },
       errors: {
-       
+        size: {
+          usefulArea: false,
+        },
       },
       availableRooms: [
         { label: 'Área de serviço', name: 'area de servico' },
@@ -159,7 +296,16 @@ export default {
     findLabelInFinalObject (room) {
       return find(this.property.availableRoom, r => room === r.name )
     },
-
+    onlyDecimal($event) {
+      let keyCode = ($event.keyCode ? $event.keyCode : $event.which);
+      if ((keyCode < 48 || keyCode > 57) && (keyCode !== 46 || this.price.indexOf('.') != -1))  // 46 is dot
+        $event.preventDefault()
+      if(this.price!=null && this.price.indexOf(".")>-1 && (this.price.split('.')[1].length > 1))
+        $event.preventDefault()
+    },
+    save () {
+      console.log(JSON.parse(JSON.stringify(this.property)))
+    }
   },
   watch: {
     "selectedRooms"(rooms) {
@@ -254,5 +400,73 @@ export default {
 }
 .availableRoom, .amoutRooms, .sharedRooms {
   min-width: 350px;
+}
+.input, textarea {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  height: 60px;
+  background: white;
+  -webkit-appearance: none;
+}
+.input {
+  max-width: 230px;
+}
+textarea {
+  width: 100%;
+  resize: vertical;
+}
+.input > label {
+  z-index: 3000;
+  background-color: white;
+  max-width: fit-content;
+  margin-left: 15px;
+  padding: 0 8px 0 4px;
+  font-size: 16px;
+}
+.input > input {
+  top: 7px;
+  width: -webkit-fill-available;
+  max-width: 100%;
+  height: 40px;
+  position: absolute;
+  border-radius: 4px;
+  padding: 5px 0 0 20px;
+  border: 1px solid #c6c6c6;
+  transition: all 0.4s ease-in-out;
+}
+textarea {
+  border: 1px solid #c6c6c6;
+}
+.input > input:focus, textarea:focus {
+  outline: none;
+  border: 1.5px solid #4976ef;
+}
+.totalArea {
+  margin-top: 10px;
+}
+.list {
+  display: flex;
+  flex-direction: column;
+}
+button.next {
+  color: white;
+  min-height: 45px;
+  margin-top: 50px;
+  width: 100%;
+  border: none;
+  border-radius: 5px;
+  font-weight: 600;
+  font-size: 15px;
+  letter-spacing: 0.6px;
+  background-color: #4976ee;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+  transform: scale(1);
+}
+button.next:hover {
+  color: white;
+  background-color: #2f2e41;
+  transform: scale(1.02);
 }
 </style>
