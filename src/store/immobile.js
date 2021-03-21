@@ -15,6 +15,12 @@ export const stateImmobile = {
     category: null,
     businessType: null
   },
+  newImmobileSteps: [
+    "Detalhes do imóvel",
+    "Localização",
+    "Pagamento",
+    "Informações de contato",
+  ]
 };
 
 export const mutationsImmobile = {
@@ -113,5 +119,15 @@ export const actionsImmobile = {
   setFirstStep(context, payload) {
     context.state.newImmobile = payload
     context.state.newImmobileCurrentStep = 1
+  },
+
+   // Volta para o passo inicial do cadastro
+   resetPropertyRegistration(context) {
+    context.state.newImmobile = {
+      title: null,
+      category: null,
+      businessType: null
+    }
+    context.state.newImmobileCurrentStep = 0
   }
 };

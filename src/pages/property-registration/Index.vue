@@ -92,7 +92,7 @@ export default {
   },
   methods: {
     validFields () {
-      event.preventDefault();
+      event.preventDefault()
       const { title, category, businessType } = this.property;
 
       isNull(title) 
@@ -156,8 +156,9 @@ export default {
     }
   },
   async mounted() {
+    this.$store.dispatch("resetPropertyRegistration")
     this.loading = false
-  }
+  },
 };
 </script>
 
@@ -307,6 +308,10 @@ button.next:hover {
   }
   .title {
     margin: 0px 0px 50px 0px;
+  }
+  .body {
+    margin: 0px 5vw 0px 5vw;
+    z-index: 2;
   }
 }
 </style>
