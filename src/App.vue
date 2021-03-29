@@ -388,4 +388,8 @@ input[type=radio]:checked:after {
   opacity: 1;
 }
 
+input:-internal-autofill-selected {
+  background-color: white !important;
+}
+
 </style>

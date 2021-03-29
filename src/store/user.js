@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import router from '../router'
-import { loginUser, createUser } from "@/services/users"
+import { loginUser, createUser, authenticate } from "@/services/users"
 
 export const stateUser = {
   isLogged: false,
@@ -11,6 +11,7 @@ export const stateUser = {
     legalEntity: "",
     telephone: ""
   },
+  userToken: "",
   loading: false,
 }
 
@@ -20,6 +21,9 @@ export const mutationsUser = {
   },
   UPDATE_USER(state, payload) {
     state.user = payload
+  },
+  UPDATE_TOKEN(state, payload) {
+    state.userToken = payload
   }
 }
 
@@ -64,14 +68,18 @@ export const actionsUser = {
   },
 
   /** Action para a o usuário logar na conta */
-  getUser(context, payload) {
+  async getUser(context, payload) {
     context.state.loading = true
-    loginUser(payload.user)
+    await authenticate(payload.user)
+      .then(response => {
+        context.commit("UPDATE_TOKEN", response.data.token)
+      })
+    await loginUser(payload.user)
       // Login realizado com sucesso
       .then(response => {
         context.state.loading = false
         const { _id, name, email, legalEntity, telephone } = response.data.user
-        
+        console.log(response.data.user)
         // Atualiza as variáveis de login
         const newUser = { _id, name, email, legalEntity, telephone }
         context.commit("UPDATE_USER", newUser)

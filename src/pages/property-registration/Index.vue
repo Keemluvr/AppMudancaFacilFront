@@ -52,6 +52,9 @@
       </div>
     </div>
     <StepOne v-else-if="this.$store.state.newImmobileCurrentStep === 1"/>
+    <StepTwo v-else-if="this.$store.state.newImmobileCurrentStep === 2"/>
+    <StepThree v-else-if="this.$store.state.newImmobileCurrentStep === 3"/>
+    <StepFour v-else-if="this.$store.state.newImmobileCurrentStep === 4"/>
   </div>
 </template>
 
@@ -60,12 +63,18 @@ import Loading from "vue-loading-overlay"
 import "vue-loading-overlay/dist/vue-loading.css"
 import { isNull, lowerCase } from "lodash"
 import StepOne from './StepOne'
+import StepTwo from './StepTwo'
+import StepThree from './StepThree'
+import StepFour from './StepFour'
 
 export default {
   name: "Dashboard",
   components: {
     Loading,
-    StepOne
+    StepOne,
+    StepTwo,
+    StepThree,
+    StepFour
   },
   data() {
     return {

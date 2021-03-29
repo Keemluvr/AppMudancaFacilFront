@@ -1,5 +1,6 @@
 import Vue from "vue";
-import { listProperties, listPropertiesByOwner, listImmobileById } from "@/services/immobile";
+import { listProperties, listPropertiesByOwner, listImmobileById, registrationImmobile } from "@/services/immobile";
+import { getLocationByCEP } from "@/services/cep";
 
 export const stateImmobile = {
   properties: [],
@@ -13,8 +14,25 @@ export const stateImmobile = {
   newImmobile: {
     title: null,
     category: null,
-    businessType: null
+    businessType: null,
+    furnished: { 
+      included: false
+    },
+    availableRoom: [],
+    size: {
+      usefulArea: null,
+      totalArea: null,
+    },
+    airConditioning: false,
+    wifiMore: {
+      wifi: false,
+      internet: false,
+      landline: false
+    },
+    petFriendly: false,
+    smookingPermitted: false
   },
+  additionalPropertyAddresses: {},
   newImmobileSteps: [
     "Detalhes do imóvel",
     "Localização",
@@ -32,6 +50,9 @@ export const mutationsImmobile = {
   },
   GET_IMMOBILE_BY_ID(state, payload) {
     state.immobile = payload;
+  },
+  GET_ADDITIONAL_INFORMATION_BY_CEP_PROPERTY(state, payload) {
+    state.additionalPropertyAddresses = payload;
   },
 };
 
@@ -121,13 +142,64 @@ export const actionsImmobile = {
     context.state.newImmobileCurrentStep = 1
   },
 
-   // Volta para o passo inicial do cadastro
-   resetPropertyRegistration(context) {
+  // Preenche segunda parte do formulário
+  setSecondStep(context, payload) {
+    context.state.newImmobile = { 
+      ...JSON.parse(JSON.stringify(context.state.newImmobile)), 
+      ...payload 
+    }
+    context.state.newImmobileCurrentStep = 2
+  },
+
+  // Preenche terceira parte do formulário
+  setThirdStep(context, payload) {
+    context.state.newImmobile = { 
+      ...JSON.parse(JSON.stringify(context.state.newImmobile)), 
+      ...payload 
+    }
+
+    context.state.newImmobileCurrentStep = 3
+  },
+
+  // Preenche quarta parte do formulário
+  setFourStep(context, payload) {
+    context.state.newImmobile = { 
+      ...JSON.parse(JSON.stringify(context.state.newImmobile)), 
+      ...payload 
+    }
+
+    context.state.newImmobileCurrentStep = 4
+  },
+
+  // Volta para o passo inicial do cadastro
+  resetPropertyRegistration(context) {
     context.state.newImmobile = {
       title: null,
       category: null,
       businessType: null
     }
     context.state.newImmobileCurrentStep = 0
+  },
+
+  // Salva o imóvel no banco de dados
+  saveImmobile(context, payload) {
+    registrationImmobile(payload, context.state.userToken)
+    // salvo com sucesso
+    .then((response) => {
+      console.log('deu certo', response)
+    })
+    // Erro ao salvar
+    .catch(({ response }) => {
+      console.log('deu errado', response)
+    })
+  },
+
+  // Retorna endereços adicionais a partir do CEP
+  getAdditionalInformationProperty(context, payload) {
+    const cep = payload.replace(/([^\d])+/gim, '');
+    getLocationByCEP(cep)
+      .then((response) => {
+        context.commit("GET_ADDITIONAL_INFORMATION_BY_CEP_PROPERTY", JSON.parse(JSON.stringify(response.data)));
+      })
   }
 };

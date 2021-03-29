@@ -1,5 +1,5 @@
 <template>
-  <div class="body">
+  <div class="body" v-if="this.$store.state.newImmobileCurrentStep === 1">
     <h1 class="title">Cadastro de imóvel</h1>
     <h2 class="subtitle" v-if="$store.state.newImmobile.category">
       {{$store.state.newImmobile.category}}
@@ -241,7 +241,6 @@ export default {
   data() {
     return {
       loading: false,
-      test: null,
       selectedRooms: [],
       amountRooms: [],
       property: {
@@ -265,6 +264,9 @@ export default {
       errors: {
         size: {
           usefulArea: false,
+          property: {
+            availableRoom: false
+          }
         },
       },
       availableRooms: [
@@ -304,7 +306,9 @@ export default {
         $event.preventDefault()
     },
     save () {
-      console.log(JSON.parse(JSON.stringify(this.property)))
+      this.loading = true
+      this.$store.dispatch("setSecondStep", JSON.parse(JSON.stringify(this.property)))
+      this.loading = false
     }
   },
   watch: {

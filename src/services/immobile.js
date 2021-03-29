@@ -14,3 +14,5 @@ export const listProperties = ({ search, filter, page = 1, limit = 5 }) => {
 export const listPropertiesByOwner = ownerId => api.get(`/immobile/owner/${ownerId}`);
 
 export const listImmobileById = immobileId => api.get(`/immobile/${immobileId}`);
+
+export const registrationImmobile = (immobile, token) => api.post(`/immobile`, immobile, { headers: { Authorization: `Bearer ${token}` }});
