@@ -1,6 +1,7 @@
 <template>
   <div id="app">
     <link rel="stylesheet" href="iziToast.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.5.0/css/ol.css" type="text/css">
     <main>
       <transition mode="out-in">
         <router-view />
@@ -13,6 +14,9 @@
 export default {
   async mounted() {
     await this.$store.dispatch("persistUser")
+      let openLayers = document.createElement('script')
+      openLayers.setAttribute('src', 'https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.5.0/build/ol.js')
+      document.head.appendChild(openLayers)
   }
 }
 </script>

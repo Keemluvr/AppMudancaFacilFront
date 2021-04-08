@@ -22,8 +22,8 @@
         :key="index"
         :content="immobile"
         :errored="errored"
-        :showLocator="true"
-      />
+        :showLocator="immobile.user !== null ? true : false"
+        v-on:click="() => this.$router.push('/immobile/'+immobile._id)"/>
     </div>
     <paginate
       v-model="page"
@@ -68,13 +68,13 @@ export default {
       });
   },
   methods: {
-    searchProperties: function () {
+    async searchProperties() {
       this.loading = true
-      this.$store
+      await this.$store
         .dispatch("getProperties", {
           search: this.search,
           filter: "title",
-          page: this.page,
+          page: 1,
         })
         .then(() => (this.loading = false))
     },

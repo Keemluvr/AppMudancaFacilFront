@@ -76,21 +76,16 @@
       </div>
     </div>
 
-   <vl-map :load-tiles-while-animating="true" :load-tiles-while-interacting="true"
-             data-projection="EPSG:4326" style="height: 400px">
-      <vl-view :zoom.sync="zoom" :center.sync="center" :rotation.sync="rotation"></vl-view>
+    <vl-map :load-tiles-while-animating="true" :load-tiles-while-interacting="true" data-projection="EPSG:4326" style="height: 400px">
+    <vl-view :zoom.sync="zoom" :center.sync="center" :rotation.sync="rotation" @update:center="updateCoordinates" @update:zoom="updateZoom"></vl-view>
 
       <vl-geoloc @update:position="geolocPosition = $event">
         <template slot-scope="geoloc">
           <vl-feature v-if="geoloc.position" id="position-feature">
             <vl-geom-point :coordinates="geoloc.position"></vl-geom-point>
-            <!-- <vl-style-box>
+            <vl-style-box>
               <vl-style-icon src="_media/marker.png" :scale="0.4" :anchor="[0.5, 1]"></vl-style-icon>
-            </vl-style-box> -->
-             
-          </vl-feature>
-          <vl-feature>
-            <vl-geom-point :coordinates="[-49.656268898624106, -16.037142654608346]"></vl-geom-point>
+            </vl-style-box>
           </vl-feature>
         </template>
       </vl-geoloc>
@@ -98,7 +93,16 @@
       <vl-layer-tile id="osm">
         <vl-source-osm></vl-source-osm>
       </vl-layer-tile>
+
+      <vl-layer-vector>
+        <vl-source-vector ident="drawTarget"></vl-source-vector>
+      </vl-layer-vector>
+
+      <vl-interaction-draw source="drawTarget" :type="drawType"  @update:center="updateCoordinates"></vl-interaction-draw>
+      <vl-interaction-modify source="drawTarget"></vl-interaction-modify>
+      <vl-interaction-snap source="drawTarget" :priority="10"></vl-interaction-snap>
     </vl-map>
+
 
     <!-- Proximidades -->
     <div class="item proximities">
@@ -157,10 +161,21 @@ export default {
   },
   data() {
     return {
-      zoom: 4,
-      center: [-49.656268898624106, -16.037142654608346],
+      zoom: 2,
+      center: [0, 0],
       rotation: 0,
       geolocPosition: undefined,
+      drawCollection: [],
+      drawType: "Point",
+      event: {
+        name: null,
+        description: null,
+        location: {
+          title: null,
+          zoom: 5,
+          coordinates: null
+        }
+      },
       locations: [
         {
           type: 'Lazer',
@@ -406,9 +421,19 @@ export default {
         })
       })
 
+      if(this.property.address.cep)
+        this.property.address.cep = this.property.address.cep.replace(/[^0-9]/g,'');
+
       this.$store.dispatch("setThirdStep", {
         ...JSON.parse(JSON.stringify(this.property)),
       })
+    },
+    updateCoordinates(data) {
+      console.log([Number(data[0]), Number(data[1])])
+      this.event.location.coordinates = [Number(data[0]), Number(data[1])];
+    },
+    updateZoom(data) {
+      this.event.location.zoom = data;
     }
   },
   watch: {

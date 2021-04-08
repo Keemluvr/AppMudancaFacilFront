@@ -88,7 +88,41 @@
         </div>
         <br/>
       </div>
+
+      <span class="message-error" v-if="errors.availableRoom">
+        É obrigatório ter pelo menos um cômodo no imóvel.
+      </span>
     </div>
+
+    <!-- Garagem -->
+    <div class="item parking">
+      <p>Garagem</p>
+      <div class="item-inline">
+        <input type="radio" id="yes-parking" name="parking" 
+          :value="true" 
+          class="radio"
+          v-model="property.parking.included">
+        <label for="yes-parking" class="radio-label">Sim</label><br>
+        <div class="item-parking" v-if="property.parking.included === true" >
+          <label for="amount-parking">Quantidade:</label>
+          <input 
+            id="amount-parking"
+            v-model="property.parking.amount" 
+            class="input-amount" 
+            type="number"
+            min="1" />
+        </div>
+      </div>
+      <div class="item-inline">
+        <input type="radio" id="no-parking" name="parking" 
+          :value="false" 
+          class="radio" 
+          checked
+          v-model="property.parking.included">
+        <label for="no-parking" class="radio-label">Não</label><br>  
+      </div>
+    </div>
+
 
     <!-- Área -->
     <div class="item area">
@@ -98,8 +132,8 @@
         <label for="usefulArea">Área útil</label>
         <input id="usefulArea" v-model="property.size.usefulArea"  @keypress="onlyDecimal"/>
       </div>
-      <span class="message-error" v-if="errors.size.usefulArea">
-        Área útil é obrigatório.
+      <span class="message-error" v-if="errors.availableRoom">
+       Área útil é obrigatório.
       </span>
 
       <!-- Área total -->
@@ -194,16 +228,15 @@
       <input type="radio" id="only-smookingPermitted" name="smookingPermitted" 
         value="apenas ar livre" 
         class="radio" 
-        checked
         v-model="property.smookingPermitted">
       <label for="only-smookingPermitted" class="radio-label">Apenas ao ar livre</label><br>  
     </div>
 
     <!-- Fotos -->
-    <div class="item photos">
+    <!-- <div class="item photos">
       <p>Fotos</p>
       <h1>Para fazer</h1>
-    </div>
+    </div> -->
 
     <!-- Descrição -->
     <div class="item description">
@@ -230,7 +263,7 @@
 import Loading from "vue-loading-overlay"
 import "vue-loading-overlay/dist/vue-loading.css"
 import TabsMenu from '../../components/Tabs'
-import { find, findIndex } from 'lodash'
+import { find, findIndex, isNull } from 'lodash'
 
 export default {
   name: "Dashboard",
@@ -252,6 +285,10 @@ export default {
           usefulArea: null,
           totalArea: null,
         },
+        parking: {
+          included: false,
+          amount: 0
+        },
         airConditioning: false,
         wifiMore: {
           wifi: false,
@@ -259,15 +296,12 @@ export default {
           landline: false
         },
         petFriendly: false,
-        smookingPermitted: false
+        smookingPermitted: "apenas ar livre" 
       },
+      missing: null,
       errors: {
-        size: {
-          usefulArea: false,
-          property: {
-            availableRoom: false
-          }
-        },
+        availableRoom: false,
+        usefulArea: false,
       },
       availableRooms: [
         { label: 'Área de serviço', name: 'area de servico' },
@@ -285,7 +319,7 @@ export default {
     };
   },
   methods: {
-    selectAmountRoom (room, amount) {
+    selectAmountRoom (room, amount = 1) {
       const index = findIndex(this.property.availableRoom, r => room === r.name)
       this.property.availableRoom[index].amount = amount
     },
@@ -305,8 +339,37 @@ export default {
       if(this.price!=null && this.price.indexOf(".")>-1 && (this.price.split('.')[1].length > 1))
         $event.preventDefault()
     },
-    save () {
+    async validFields () {
+      const { availableRoom, size } = JSON.parse(JSON.stringify(this.property));
+
+      availableRoom.length > 0
+        ? (this.errors.availableRoom = false)
+        : (this.errors.availableRoom = true)
+
+      !isNull(size.usefulArea) && size.usefulArea > 0
+        ? (this.errors.usefulArea = false)
+        : (this.errors.usefulArea = true)
+
+      this.loading = false
+    },
+    async save () {
       this.loading = true
+      await this.validFields() 
+      
+       for (var [key, value] of Object.entries(this.errors)) {
+         if(value === true) {
+          this.missing = key
+          window.scrollTo({
+            top: 400,
+            behavior: 'smooth',
+          })
+          return
+        }
+      }
+
+      if(isNull(this.property.size.totalArea))
+        this.property.size.totalArea = 0
+
       this.$store.dispatch("setSecondStep", JSON.parse(JSON.stringify(this.property)))
       this.loading = false
     }
@@ -321,6 +384,24 @@ export default {
           shared: this.property.availableRoom[this.findIndexRoom(room)]?.shared || false })
       })
       this.property.availableRoom = allSelected
+    },
+    "property.availableRoom"(value) {
+      JSON.parse(JSON.stringify(value)).length > 0
+        ? (this.errors.availableRoom = false)
+        : (this.errors.availableRoom = true)
+    },
+    "property.size.usefulArea"(value) {
+      !isNull(value) && value > 0
+        ? (this.errors.usefulArea = false)
+        : (this.errors.usefulArea = true)
+    },
+    "property.parking.included"(value) {
+      console.log(value)
+      if(!value) {
+        this.property.parking.amount = 0
+      } else {
+        this.property.parking.amount = 1
+      }
     },
   },
   async mounted() {
@@ -402,7 +483,7 @@ export default {
 .room > label, .item-amount-rooms > label {
   margin-left: 10px;
 }
-.availableRoom, .amoutRooms, .sharedRooms {
+.availableRoom, .amoutRooms, .sharedRooms, .parking {
   min-width: 350px;
 }
 .input, textarea {
@@ -467,10 +548,40 @@ button.next {
   cursor: pointer;
   transition: all 0.3s ease-in-out;
   transform: scale(1);
+  outline: none;
+  margin-bottom: 50px;
 }
 button.next:hover {
   color: white;
   background-color: #2f2e41;
   transform: scale(1.02);
+}
+.message-error {
+  color: red;
+  font-size: 15px;
+  margin-top: 15px;
+  display: block;
+  width: 100%;
+}
+.item-inline {
+  display: flex;
+  margin-bottom: 10px;
+}
+.input-amount {
+  display: inline-block;
+  width: 40px;
+  margin-left: 5px;
+  border: 1px solid rgba(112,112,112,.4);
+  padding: 3px 3px 3px 10px;
+  border-radius: 5px;
+  outline: none;
+}
+.input-amount:focus {
+  border-color: #4976ee;
+}
+.item-parking {
+  margin-left: 15px;
+  font-size: 16px;
+  color: black;
 }
 </style>

@@ -1,4 +1,5 @@
 import Vue from "vue";
+import router from '../router'
 import { listProperties, listPropertiesByOwner, listImmobileById, registrationImmobile } from "@/services/immobile";
 import { getLocationByCEP } from "@/services/cep";
 
@@ -44,6 +45,7 @@ export const stateImmobile = {
 export const mutationsImmobile = {
   LIST_PROPERTIES(state, payload) {
     state.properties = payload;
+    console.log(payload)
   },
   LIST_PROPERTIES_BY_OWNER(state, payload) {
     state.propertiesByOwner = payload;
@@ -183,14 +185,63 @@ export const actionsImmobile = {
 
   // Salva o imóvel no banco de dados
   saveImmobile(context, payload) {
-    registrationImmobile(payload, context.state.userToken)
+    console.log( JSON.parse(localStorage.getItem('MF_USER')).token)
+    registrationImmobile(payload, JSON.parse(localStorage.getItem('MF_USER')).token)
     // salvo com sucesso
-    .then((response) => {
+    .then(async (response) => {
       console.log('deu certo', response)
+       // Mostra o popup confirmando o cadastro do imóvel
+       Vue.$toast.open(
+        payload.popupError
+          ? payload.popupError
+          : {
+              message: 'Imóvel cadastrado com sucesso!',
+              type: "success",
+              position: "top-right",
+            }
+      );
+      // Relista todos os imóveis
+      await listProperties(payload && payload)
+      // Listagem realizada com sucesso
+      .then((response) => {
+        context.state.loadingProperties = false;
+        context.state.lengthPagesProperties = response.data.totalPages;
+        context.state.currentPageProperties = ~response.data.currentPage;
+        // Atualiza as variáveis da listagem de imóveis
+        context.commit("LIST_PROPERTIES", response.data.properties);
+      })
+      // Erro ao realizar listagem
+      .catch(({ response }) => {
+        context.state.loadingProperties = false;
+
+        // Mostra o popup que houve um erro ao realizar listagem
+        Vue.$toast.open(
+          payload.popupError
+            ? payload.popupError
+            : {
+                message: response.data.error,
+                type: "error",
+                position: "top-right",
+              }
+        );
+      });
+
+      // Redireciona para a tela inicial
+      router.push('/')
     })
     // Erro ao salvar
     .catch(({ response }) => {
       console.log('deu errado', response)
+       // Mostra o popup que houve um erro ao cadastrar imóvel
+       Vue.$toast.open(
+        payload.popupError
+          ? payload.popupError
+          : {
+              message: response.data.error,
+              type: "error",
+              position: "top-right",
+            }
+      );
     })
   },
 

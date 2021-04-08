@@ -159,6 +159,8 @@ export default {
   position: fixed;
   right: 20px;
   bottom: 50px;
+  z-index: 5000;
+  outline: none;
 }
 .btn-add-property:hover {
   cursor: pointer;

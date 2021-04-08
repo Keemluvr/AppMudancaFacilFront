@@ -20,24 +20,24 @@
       </div>
       <div class="position-bottom">
         <div class="info-basics">
-          <div class="bedroom">
+          <div class="bedroom" v-if="bedroom > 0">
             <img src="@/assets/icons/bedroom.svg" class="icon-bedroom" />
-            <p class="desc-bedroom">{{content.availableRoom[2].amount}} {{content.availableRoom[2].name}}</p>
+            <p class="desc-bedroom">{{bedroom}} quarto</p>
           </div>
-          <div class="toilet">
+          <div class="toilet" v-if="toilet > 0">
             <img src="@/assets/icons/toilet.svg" class="icon-toilet" />
-            <p class="desc-toilet">{{content.availableRoom[1].amount}} {{content.availableRoom[1].name}}</p>
+            <p class="desc-toilet">{{toilet}} toilet</p>
           </div>
         </div>
       </div>
-      <div v-if="showLocator" class="info-locator">
+      <div v-if="showLocator"  class="info-locator">
         <p class="locator">LOCADOR</p>
         <div class="locator-wrapper">
           <img src="@/assets/icons/user.svg" class="icon-locator" />
             <div class="desc-locator">
-              <p class="name-locator">Joãozinho</p>
-              <a class="tel-locator" href="tel:+55499999999999">
-                +55 49 99999-99999
+              <p class="name-locator">{{ content.user.name }}</p>
+              <a class="tel-locator" :href="`tel:${content.user.telephone}`">
+                {{ content.user.telephone }}
               </a>
             </div>
           </div>
@@ -47,14 +47,21 @@
 </template>
 
 <script>
+import { findKey } from 'lodash'
 export default {
   name: "Item",
+  data() {
+    return {
+      bedroom: findKey(this.content.availableRoom, (prop) => prop.name ==='quarto') || 0,
+      toilet: findKey(this.content.availableRoom, (prop) => prop.name ==='banheiro') || 0
+    }
+  },
   props: {
     showLocator: Boolean,
     content: Object,
     errored: Boolean,
   },
-   filters: {
+  filters: {
     currency: function (value) {
       if (typeof value !== "number") {
         return value;
@@ -65,6 +72,11 @@ export default {
           minimumFractionDigits: 0
       });
       return formatter.format(value);
+    }
+  },
+  methods: {
+    redirect() {
+      this.$router.push('/immobile/'+this.content._id);
     }
   }
 };

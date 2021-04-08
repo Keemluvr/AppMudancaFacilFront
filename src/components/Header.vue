@@ -14,7 +14,7 @@
         Meus Imóveis
       </router-link>
 
-      <router-link v-if="$store.state.isLogged" to="/perfil">
+      <router-link v-if="$store.state.isLogged" to="/">
         <img src="@/assets/icons/user.svg" class="icon-user" />
         {{ name }}
       </router-link>
@@ -46,7 +46,7 @@
 
         <!-- Logado -->
         <router-link v-if="$store.state.isLogged" to="/meus-imoveis"> Meus Imóveis </router-link>
-        <router-link v-if="$store.state.isLogged" to="/perfil"> Perfil </router-link>
+        <router-link v-if="$store.state.isLogged" to="/"> Perfil </router-link>
         <router-link v-if="$store.state.isLogged" to="/" @click.native="logOut"> Sair </router-link>
       </div>
     </nav>

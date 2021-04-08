@@ -191,8 +191,8 @@ export default {
   width: 150px;
   height: auto;
   left: 0px;
-  bottom: 0px;
-  z-index: 1;
+  bottom: -50px;
+  z-index: -1;
 }
 .title {
   text-align: center;

@@ -1,6 +1,6 @@
 import api from "./api";
 
-export const listProperties = ({ search, filter, page = 1, limit = 5 }) => {
+export const listProperties = ({ search, filter, page = 1, limit = 4 }) => {
   return search && filter
     ? api.get(`/properties?page=${page}&limit=${limit}`, {
         params: {

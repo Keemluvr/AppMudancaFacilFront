@@ -11,12 +11,14 @@ import VueLayers from 'vuelayers'
 import 'vuelayers/lib/style.css' // needs css-loader
 import { PointGeom } from 'vuelayers'
 import VueCurrencyInput from "vue-currency-input";
+import { DrawInteraction } from 'vuelayers'
 
 Vue.config.productionTip = false
 
 Vue.use(VueTheMask)
 Vue.use(VueToast)
 Vue.use(VueLayers)
+Vue.use(DrawInteraction)
 Vue.use(PointGeom)
 Vue.use(VueCurrencyInput)
 Vue.use(x5GMaps, { key:'AIzaSyAZjhps_ZyxSQwtAGhQwef7e6PFw4cqYfM', libraries: ['places']})

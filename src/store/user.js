@@ -9,9 +9,9 @@ export const stateUser = {
     name: "",
     email: "",
     legalEntity: "",
-    telephone: ""
+    telephone: "",
   },
-  userToken: "",
+  token: "",
   loading: false,
 }
 
@@ -23,7 +23,7 @@ export const mutationsUser = {
     state.user = payload
   },
   UPDATE_TOKEN(state, payload) {
-    state.userToken = payload
+    state.token = payload
   }
 }
 
@@ -70,10 +70,11 @@ export const actionsUser = {
   /** Action para a o usuário logar na conta */
   async getUser(context, payload) {
     context.state.loading = true
+   
     await authenticate(payload.user)
-      .then(response => {
-        context.commit("UPDATE_TOKEN", response.data.token)
-      })
+    .then(response => {
+      context.commit("UPDATE_TOKEN", response.data.token)
+    })
     await loginUser(payload.user)
       // Login realizado com sucesso
       .then(response => {
@@ -84,7 +85,7 @@ export const actionsUser = {
         const newUser = { _id, name, email, legalEntity, telephone }
         context.commit("UPDATE_USER", newUser)
         context.commit("UPDATE_LOGIN", true)
-        localStorage.setItem("MF_USER", JSON.stringify(newUser));
+        localStorage.setItem("MF_USER", JSON.stringify({...context.state.user, token:context.state.token}));
 
         // Mostra o popup que o login foi um sucesso
         Vue.$toast.open(payload.popupSuccess ? payload.popupSuccess : {
