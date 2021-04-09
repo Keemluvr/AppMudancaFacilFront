@@ -74,7 +74,7 @@ export default {
         .dispatch("getProperties", {
           search: this.search,
           filter: "title",
-          page: 1,
+          page: this.page,
         })
         .then(() => (this.loading = false))
     },

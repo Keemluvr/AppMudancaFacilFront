@@ -10,7 +10,7 @@
     ></div>
     <div class="infos">
       <h2 class="title">{{ content.title }}</h2>
-      <h3 class="price">{{ content.price | currency }}</h3>
+      <h3 class="price">{{ content.price }}</h3>
       <h4 class="description">{{ content.description }}</h4>
       <div class="location">
         <img src="@/assets/icons/location.svg" class="icon-location" />
@@ -79,6 +79,10 @@ export default {
   methods: {
     redirect() {
       this.$router.push('/immobile/'+this.content._id);
+    },
+    formatPrice(value) {
+      let val = (value/1).toFixed(2).replace('.', ',')
+      return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
     }
   }
 };
