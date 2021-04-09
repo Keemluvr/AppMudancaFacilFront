@@ -1,5 +1,6 @@
 <template>
   <router-link tag="div" class="content" :to="'/immobile/'+content._id">
+  <div v-on:click="redirect">
     <div
       class="image"
       :style="{
@@ -14,7 +15,7 @@
       <div class="location">
         <img src="@/assets/icons/location.svg" class="icon-location" />
         <p class="desc-location">
-          Rua {{ content.address.street }} - {{ content.address.neighborhood }},
+          {{ content.address.street }} - {{ content.address.neighborhood }},
           {{ content.address.city }} - {{ content.address.state }}
         </p>
       </div>
@@ -43,6 +44,7 @@
           </div>
         </div>
       </div>
+    </div>
   </router-link>
 </template>
 

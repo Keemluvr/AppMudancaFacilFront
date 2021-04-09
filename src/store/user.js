@@ -80,7 +80,6 @@ export const actionsUser = {
       .then(response => {
         context.state.loading = false
         const { _id, name, email, legalEntity, telephone } = response.data.user
-        console.log(response.data.user)
         // Atualiza as variáveis de login
         const newUser = { _id, name, email, legalEntity, telephone }
         context.commit("UPDATE_USER", newUser)

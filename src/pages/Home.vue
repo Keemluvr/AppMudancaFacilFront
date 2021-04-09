@@ -23,7 +23,7 @@
         :content="immobile"
         :errored="errored"
         :showLocator="immobile.user !== null ? true : false"
-        v-on:click="() => this.$router.push('/immobile/'+immobile._id)"/>
+        v-on:click.self="() => this.$router.go('/immobile/'+immobile._id)"/>
     </div>
     <paginate
       v-model="page"

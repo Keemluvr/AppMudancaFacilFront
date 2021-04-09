@@ -45,7 +45,6 @@ export const stateImmobile = {
 export const mutationsImmobile = {
   LIST_PROPERTIES(state, payload) {
     state.properties = payload;
-    console.log(payload)
   },
   LIST_PROPERTIES_BY_OWNER(state, payload) {
     state.propertiesByOwner = payload;
@@ -185,7 +184,6 @@ export const actionsImmobile = {
 
   // Salva o imóvel no banco de dados
   saveImmobile(context, payload) {
-    console.log( JSON.parse(localStorage.getItem('MF_USER')).token)
     registrationImmobile(payload, JSON.parse(localStorage.getItem('MF_USER')).token)
     // salvo com sucesso
     .then(async (response) => {

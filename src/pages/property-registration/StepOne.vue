@@ -396,7 +396,6 @@ export default {
         : (this.errors.usefulArea = true)
     },
     "property.parking.included"(value) {
-      console.log(value)
       if(!value) {
         this.property.parking.amount = 0
       } else {
